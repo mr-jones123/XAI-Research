@@ -1,0 +1,33 @@
+name: Semantic Release
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/commit-analyzer
+            @semantic-release/git
+            @semantic-release/github
+            @semantic-release/release-notes-generator
+            conventional-changelog-conventionalcommits
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_API}}
+      - name: Output new release version
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo "New release version: ${{ steps.semantic.outputs.new_release_version }}"
+    timeout-minutes: 1
