@@ -1,5 +1,5 @@
 import React from "react";
-import { ProfileCard } from "../ui/profile";
+import { ProfileCard } from "@/components/profile";
 
 const Developers = [
   { name: "Xynil Jhed Lacap", role: "Project Manager", image: "/picture.png" },

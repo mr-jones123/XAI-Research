@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import About from "./About";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const Intro = () => {
   return (
@@ -20,9 +14,11 @@ const Intro = () => {
           bibendum justo arcu, a tristique orci tempor non. Duis et viverra
           nisl, ac tristique dui.
         </p>
-        <img
+        <Image
           className="w-60 h-60 mt-5 rounded-full bg-black transition-transform duration-300 hover:scale-90"
-          src="sample-logo.png"
+          width = {200}
+          height={200}
+          src="/sample-logo.png"
           alt="logo"
         />
         <Button className="mt-4 px-6 h-12">Get Started</Button>
