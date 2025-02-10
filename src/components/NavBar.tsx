@@ -8,9 +8,10 @@ const navLinks = [
 
 const NavBar = () => {
   return (
-    <nav className="bg-slate-400 border-black dark:bg-gray-900">
+    <nav className="bg-slate-400 border-black dark:bg-gray-900 fixed top-0 w-full z-50">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/*for profile implementation*/}
+        <h1>XaI</h1>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <button
             data-collapse-toggle="navbar-cta"
@@ -38,7 +39,7 @@ const NavBar = () => {
           </button>
         </div>
         <div
-          className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+          className="items-center justify-between hidden w-full md:flex md:w-auto md:order-2"
           id="navbar-cta"
         >
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
@@ -55,7 +56,6 @@ const NavBar = () => {
           </ul>
         </div>
       </div>
-      <hr className="border-t-2 border-gray-300 dark:border-gray-700 mt-2 w-full" />
     </nav>
   );
 };

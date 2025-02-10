@@ -6,9 +6,9 @@ import Image from "next/image";
 const Intro = () => {
   return (
     <div className="h-screen overflow-y-auto snap-y snap-mandatory scrollbar-hide">
-      <div className="h-screen flex flex-col items-center snap-start">
+      <div className="h-screen flex flex-col justify-center items-center snap-start">
         <h1 className="text-lg pb-5 pt-4">Welcome to XAI</h1>
-        <p className="max-w-prose">
+        <p className="max-w-prose text-center px-4">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
           accumsan turpis molestie, lobortis metus sed, molestie lorem. Sed
           bibendum justo arcu, a tristique orci tempor non. Duis et viverra

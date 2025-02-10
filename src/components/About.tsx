@@ -18,8 +18,8 @@ const Developers = [
 
 const About = () => {
   return (
-    <div className="p-10">
-      <h1 className="mb-8 text-2x1 sm:text-3x1 md:text-4x1 lg:text-5x1 font-bold">
+    <div className="mt-9">
+      <h1 className="mb-2 text-2x1 sm:text-3x1 md:text-4x1 lg:text-5x1 font-bold">
         Developers
       </h1>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
