@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import AppSideBar from "@/components/app-sidebar";
 import type { Metadata } from "next";
-import { SidebarComponent, History } from "@/components/sidebar";
 
 export const metadata: Metadata = {
   title: "XeeAI",
@@ -13,10 +13,18 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <main>
-      <SidebarComponent />
-      <History />
-      {children}
-    </main>
+    <div className="flex">
+      <div>
+        <SidebarProvider>
+        <AppSideBar />
+          <div>
+            <SidebarTrigger />
+          </div>
+        </SidebarProvider>
+      </div>
+      <main className="flex-1">
+        {children}
+      </main>
+    </div>
   );
 }
