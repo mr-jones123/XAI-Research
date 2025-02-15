@@ -44,6 +44,10 @@ const SidebarComponent = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>History</SidebarGroupLabel>
+          {/*implement history chatbot backend*/}
+        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   );
