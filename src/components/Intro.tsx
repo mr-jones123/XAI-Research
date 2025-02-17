@@ -1,36 +1,40 @@
-import React from "react";
-import About from "./About";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { Button } from "@/components/ui/button"
+import About from "./About"
 
 const Intro = () => {
   return (
-<>
-
-      <div className="h-screen overflow-y-auto snap-y snap-mandatory scrollbar-hide">
-        <div className="h-screen flex flex-col items-center snap-start bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#6366f1] via-[#a5b4fc] to-[#e0e7ff] pt-16">
-          <h1 className="text-lg pb-5 pt-4">Welcome to XAI</h1>
-          <p className="max-w-prose">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec accumsan turpis molestie, lobortis metus sed,
-            molestie lorem. Sed bibendum justo arcu, a tristique orci tempor non. Duis et viverra nisl, ac tristique
-            dui.
-          </p>
-          <Image
-            className="w-60 h-60 mt-5 rounded-full bg-black transition-transform duration-300 hover:scale-90"
-            width={200}
-            height={200}
-            src="/sample-logo.png"
-            alt="logo"
-          />
-          <Button className="mt-4 px-6 h-12">Get Started</Button>
-        </div>
-
-        <div className="h-screen flex flex-col items-center justify-center bg-gray-800 text-white snap-start">
-          <About />
-        </div>
+    <div className="h-screen overflow-y-auto snap-y snap-mandatory scrollbar-hide">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white snap-start">
+        {/* Hero Section */}
+        <main className="container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-3xl mx-auto text-center space-y-6 mt-20"> {/* Added mt-20 for more space at the top */}
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+              Bringing{" "}
+              <span className="text-blue-500 relative">
+                Clarity
+                <div className="absolute -bottom-1 left-0 w-full h-1 bg-blue-500/30 rounded-full" />
+              </span>
+            </h1>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mt-4"> {/* Added mt-4 for spacing between the lines */}
+              to AI decisions
+            </h2>
+            <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+             Understand the &apos;why&apos; behind AI decisions. 
+             Our system ensures clarity and transparency by explaining every AI decision in a way you can trust.
+            </p>
+            <Button size="lg" className="bg-blue-500 hover:bg-blue-600">
+              Get Started
+            </Button>
+          </div>
+        </main>
       </div>
-    </>
-  )
-};
 
-export default Intro;
+      {/* About Section - Preserved from original */}
+      <div className="h-screen flex flex-col items-center justify-center bg-gray-800 text-white snap-start">
+        <About />
+      </div>
+    </div>
+  )
+}
+
+export default Intro
