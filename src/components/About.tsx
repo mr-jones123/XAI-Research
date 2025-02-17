@@ -19,12 +19,12 @@ const Developers = [
   },
   {
     name: "Raphael Andre Mercado",
-    role: "Frontend/Backend",
+    role: "Fullstack",
     image: "/mercado-pic.jpg",
   },
 ];
 
-const About = () => {
+export const About = () => {
   return (
     <div className="p-10 bg-gradient-to-br from-blue-50 to-white">
       <div className="max-w-7xl mx-auto">

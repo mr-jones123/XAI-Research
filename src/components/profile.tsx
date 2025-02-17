@@ -19,9 +19,8 @@ export const ProfileCard = ({ name, role, image, onClick }: ProfileProps) => {
         <Image
           src={image}
           alt="profilePicture"
-          layout="fill"
-          objectFit="cover"
-          className="transition-transform duration-300 group-hover:scale-110"
+          fill
+          className="transition-transform duration-300 group-hover:scale-110 object-cover"
         />
       </div>
 
