@@ -1,5 +1,5 @@
 import { createGoogleGenerativeAI} from '@ai-sdk/google';
-import { generateText} from 'ai';
+import { streamText} from 'ai';
 import axios from 'axios';
 
 const google = createGoogleGenerativeAI({
@@ -7,15 +7,13 @@ const google = createGoogleGenerativeAI({
 })
 export async function POST(req:Response) {
     const { messages } = await req.json();
-    const response = await generateText({
+    const response = await streamText   ({
         model: google('gemini-1.5-flash'),
         messages
     });
     const limePrediction = await axios.post('http://localhost:5000/lime-prediction',{
         prediction : response
     })
-    console.log(JSON.stringify(limePrediction.data));
-    return new Response(JSON.stringify(limePrediction.data), {
-        headers: { 'Content-Type': 'application/json' },
-    });
+
+    return response.toDataStreamResponse();
 }
