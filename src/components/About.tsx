@@ -1,5 +1,7 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { ProfileCard } from "@/components/profile";
+import ProfileDialog from "./dialog";
 
 const Developers = [
   {
@@ -25,6 +27,18 @@ const Developers = [
 ];
 
 export const About = () => {
+  const [selectedDev, setSelectedDev] = useState<(typeof Developers)[0] | null>(
+    null
+  );
+
+  const handleOpenDialog = (developer: (typeof Developers)[0]) => {
+    setSelectedDev(developer);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedDev(null);
+  };
+
   return (
     <div className="p-10 bg-gradient-to-br from-blue-50 to-white">
       <div className="max-w-7xl mx-auto">
@@ -38,10 +52,20 @@ export const About = () => {
               name={developer.name}
               role={developer.role}
               image={developer.image}
+              onClick={() => handleOpenDialog(developer)}
             />
           ))}
         </div>
       </div>
+      {selectedDev && (
+        <ProfileDialog
+          isOpen={!!selectedDev}
+          onClose={handleCloseDialog}
+          name={selectedDev.name}
+          role={selectedDev.role}
+          image={selectedDev.image}
+        />
+      )}
     </div>
   );
 };
