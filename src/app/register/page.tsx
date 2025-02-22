@@ -1,7 +1,10 @@
 import React from "react";
+import RegisterUI from "@/components/register";
 
-const page = () => {
-  return <div>page</div>;
-};
-
-export default page;
+export default function registerPage() {
+  return (
+    <div>
+      <RegisterUI />
+    </div>
+  );
+}

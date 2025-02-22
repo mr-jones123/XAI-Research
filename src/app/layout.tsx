@@ -1,4 +1,4 @@
-import  { Metadata } from "next";
+import { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import NavBarWrapper from "@/utils/navBarWrapper";

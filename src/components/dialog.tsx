@@ -27,22 +27,28 @@ const ProfileDialog = ({
 }: profileDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{name}</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="relative w-full h-64">
+      <DialogContent className="sm:max-w-[800px] p-0 overflow-hidden">
+        <div className="flex flex-col sm:flex-row">
+          <div className="flex-1 p-6">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold">{name}</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div>
+                <h4 className="font-semibold text-lg text-primary">{role}</h4>
+                <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
+                  {description}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="relative w-full sm:w-[350px] h-[300px] sm:h-auto">
             <Image
-              src={image}
+              src={image || "/placeholder.svg"}
               alt={name}
               fill
-              className="object-cover rounded-md"
+              className="object-cover"
             />
-          </div>
-          <div>
-            <h4 className="font-semibold">{role}</h4>
-            <p className="text-sm text-gray-500">{description}</p>
           </div>
         </div>
       </DialogContent>
