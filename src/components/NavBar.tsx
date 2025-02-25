@@ -19,6 +19,7 @@ const NavBar = () => {
           href="/"
           className="flex items-center space-x-2 rtl:space-x-reverse"
         >
+
           <Image
             src="/XeeAI Logo (Draft).svg"
             className="h-8"

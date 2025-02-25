@@ -37,11 +37,8 @@ probability = model.predict_proba([instance])
 print(f"Predicted class: {class_names[prediction[0]]}")
 print(f"Prediction probabilities: {probability[0]}")
 
-# Explain the prediction using LIME
 exp = explainer.explain_instance(instance, model.predict_proba, num_features=4)
 
-# Print the explanation
+
 print(exp.as_list())
 
-# Visualize the explanation
-exp.show_in_notebook(show_table=True, show_all=False)
