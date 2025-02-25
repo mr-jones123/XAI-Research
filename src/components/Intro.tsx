@@ -7,7 +7,6 @@ const Intro = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
         <main className="container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center space-y-6 mt-20">
-
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
               Bringing{" "}
               <span className="text-blue-500 relative">
@@ -15,7 +14,6 @@ const Intro = () => {
                 <div className="absolute -bottom-1 left-0 w-full h-1 bg-blue-500/30 rounded-full" />
               </span>
             </h1>
-            
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight mt-4">
               to AI decisions
             </h2>
@@ -36,4 +34,4 @@ const Intro = () => {
   );
 };
 
-export default Intro
+export default Intro;
