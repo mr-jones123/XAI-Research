@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const data = await flaskResponse.json();
 
     const prompt = {
-      model: "llama-3.1-8b-instant",
+      model: "llama-3.2-1b-preview",
       messages: [
         {
           role: "system",
