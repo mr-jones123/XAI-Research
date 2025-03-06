@@ -1,10 +1,7 @@
 import {
   Dialog,
   DialogHeader,
-  DialogFooter,
   DialogContent,
-  DialogTrigger,
-  DialogClose,
   DialogTitle,
 } from "./ui/dialog";
 import Image from "next/image";

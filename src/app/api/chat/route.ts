@@ -25,7 +25,11 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: "Explain the important top keywords that resulted in the output of an LLM"
+          content: 
+          `Given the AI response ${data.AIResponse}, 
+          explain to the user what do these important scores ${data.LIMEOutput} 
+          mean and how it influenced the output of the LLM. Dont mention that 
+          it comes from a JSON object`
         },
         {
           role: "user",

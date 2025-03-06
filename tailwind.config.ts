@@ -10,7 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        montserrat: ["var(--font-montserrat)", "sans-serif"],
+        sentient: ["var(--font-sentient)"],
+        geist : ["var(--font-geist)"]
       },
       colors: {
         background: "hsl(var(--background))",

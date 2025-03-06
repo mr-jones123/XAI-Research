@@ -1,4 +1,4 @@
-import lime
+from groq import Groq
 from lime.lime_text import LimeTextExplainer
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch.nn.functional as F
@@ -8,22 +8,26 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-tokenizer = AutoTokenizer.from_pretrained("gpt2")
-model = AutoModelForCausalLM.from_pretrained("gpt2")
+from transformers import AutoTokenizer, AutoModelForCausalLM
+try:
+    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
+    model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
+    print("Model and tokenizer loaded successfully!")
+except Exception as e:
+    print(f"Error loading model and tokenizer: {e}")
 
 def lime_prediction_function(text_inputs):
-    # probability scores
+      # The quick brown fox
     prob_scores = []
-    
     for text in text_inputs:
         # Tokenize input
         inputs = tokenizer(text, return_tensors="pt", truncation=True)
-        input_ids = inputs.input_ids
+        input_ids = inputs.input_ids # indicies for tokens
     
         with torch.no_grad():
-            outputs = model(input_ids)
+            outputs = model(input_ids)   # turn tokens into logits
         
-        logits = outputs.logits  
+        logits = outputs.logits   
         softmax_probs = F.softmax(logits, dim=-1)  # Convert logits to probabilities
         
         # Get probability of the most likely next token
@@ -44,24 +48,25 @@ def gptResponse(text):
 # Handle POST request from the user and passes it back onto the route.ts backend
 @app.route("/lime-algorithm", methods=["POST"])
 def limeAlgorithm():
+
     try: 
         data = request.get_json()  # Get JSON data from the request
         if not data or "input" not in data:
             return {"error": "Invalid request, 'input' is required"}, 400
         
         input_text = data["input"]
-        explainer = LimeTextExplainer(class_names=["Not Important", "Important"])
+        explainer = LimeTextExplainer(class_names=["Important", "Not Important"])
 
         # Generate an explanation for the comment
-        exp = explainer.explain_instance(input_text, lime_prediction_function, num_features=5, num_samples=30)
+        exp = explainer.explain_instance(input_text, lime_prediction_function, num_features=5, num_samples=100)
         
         response = {
             "LIMEOutput": exp.as_list(), # Make sure 'LIMEOutput' exists in response
             "AIResponse" : gptResponse(input_text)
         }
-        return jsonify(response), 200   # Return JSON response with status 200
-    except:
-        return "Something went wrong. Try again later."
+        return response, 200   # Return JSON response with status 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "Something went wrong. Try again later."}), 500
 
-if __name__ == "__main__":
-    app.run()
+app.run()
