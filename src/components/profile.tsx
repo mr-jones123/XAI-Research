@@ -6,25 +6,33 @@ interface ProfileProps {
   name: string;
   role: string;
   image: string;
+  onClick?: () => void;
 }
 
-export const ProfileCard = ({ name, role, image }: ProfileProps) => {
+export const ProfileCard = ({ name, role, image, onClick }: ProfileProps) => {
   return (
-    <Card className="relative w-40 h-40 p-4 group cursor-pointer overflow-hidden transition-all duration-300">
-      <Image
-        src={image}
-        alt="profilePicture"
-        width={600}
-        height={600}
-        className="object-fill pt-4"
-      />
-      <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-90 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <CardHeader>
-          <CardTitle className="text-lg">{name}</CardTitle>
+    <Card
+      className="relative w-64 h-80 group cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg"
+      onClick={onClick}
+    >
+      <div className="inset-0 bg-gradient-to-b from-transparent to-black transition-opacity duration-300">
+        <Image
+          src={image}
+          alt="profilePicture"
+          fill
+          className="transition-transform duration-300 group-hover:scale-110 object-cover"
+        />
+      </div>
+
+      <div className="absolute inset-0 flex flex-col justify-end p-6  transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 font-montserrat">
+        <CardHeader className="p-0">
+          <CardTitle className="text-2x1 font-bold mb-1 text-white ">
+            {name}
+          </CardTitle>
         </CardHeader>
 
-        <CardContent>
-          <CardTitle className="text-sm text-gray-500">{role}</CardTitle>
+        <CardContent className="p-0">
+          <CardTitle className="text-sm text-white mb-4">{role}</CardTitle>
         </CardContent>
       </div>
     </Card>

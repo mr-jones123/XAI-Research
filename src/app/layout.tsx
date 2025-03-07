@@ -1,12 +1,17 @@
-import  { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Metadata } from "next";
+import {Geist_Mono} from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import NavBarWrapper from "@/utils/navBarWrapper";
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
-});
+const geist = Geist_Mono({
+    subsets : ['latin'],
+    variable : "--font-geist"
+})
+const sentient = localFont({
+  src: "./fonts/sentient.ttf",
+  variable : "--font-sentient"
+})
 
 export const metadata: Metadata = {
   title: "XeeAI",
@@ -19,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${montserrat.variable} font-sans antialiased`}>
+    <html lang="en" className={`${sentient.variable} ${geist.variable}`}>
+      <body>
         <NavBarWrapper />
         {children}
       </body>

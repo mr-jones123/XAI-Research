@@ -1,37 +1,71 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { ProfileCard } from "@/components/profile";
+import ProfileDialog from "./dialog";
 
 const Developers = [
-  { name: "Xynil Jhed Lacap", role: "Project Manager", image: "/picture.png" },
+  {
+    name: "Xynil Jhed Lacap",
+    role: "Project Manager",
+    image: "/xynil-pic.jpg",
+  },
   {
     name: "Janna Andrea Justiniano",
     role: "Fullstack/UI/UX",
-    image: "/picture.png",
+    image: "/janna-pic.jpg",
   },
-  { name: "John Aiverson Abong", role: "Docs/UI", image: "/picture.png" },
+  {
+    name: "John Aiverson Abong",
+    role: "Docs/UI/QA",
+    image: "/aiverson-pic.jpg",
+  },
   {
     name: "Raphael Andre Mercado",
-    role: "Frontend/Backend",
-    image: "/picture.png",
+    role: "Fullstack",
+    image: "/mercado-pic.jpg",
   },
 ];
 
-const About = () => {
+export const About = () => {
+  const [selectedDev, setSelectedDev] = useState<(typeof Developers)[0] | null>(
+    null
+  );
+
+  const handleOpenDialog = (developer: (typeof Developers)[0]) => {
+    setSelectedDev(developer);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedDev(null);
+  };
+
   return (
-    <div className="p-10">
-      <h1 className="mb-8 text-2x1 sm:text-3x1 md:text-4x1 lg:text-5x1 font-bold">
-        Developers
-      </h1>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {Developers.map((developer, index) => (
-          <ProfileCard
-            key={index}
-            name={developer.name}
-            role={developer.role}
-            image={developer.image}
-          />
-        ))}
+    <div className="p-10 bg-gradient-to-br from-blue-50 to-white">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="mb-12 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center font-montserrat text-black drop-shadow-lg">
+          Meet the Team
+        </h1>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {Developers.map((developer, index) => (
+            <ProfileCard
+              key={index}
+              name={developer.name}
+              role={developer.role}
+              image={developer.image}
+              onClick={() => handleOpenDialog(developer)}
+            />
+          ))}
+        </div>
       </div>
+      {selectedDev && (
+        <ProfileDialog
+          isOpen={!!selectedDev}
+          onClose={handleCloseDialog}
+          name={selectedDev.name}
+          role={selectedDev.role}
+          image={selectedDev.image}
+        />
+      )}
     </div>
   );
 };
