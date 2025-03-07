@@ -42,9 +42,8 @@ const Intro = () => {
             </ContainerScroll>
           </section>
 
-          <section>
             <MaskedEffect />
-          </section>
+
         </main>
       </div>
     </div>

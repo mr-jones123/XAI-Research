@@ -17,26 +17,30 @@ export const MaskContainer = ({
   className?: string;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [mousePosition, setMousePosition] = useState<{x : number | null, y : number | null}>({ x: null, y: null });
+  const [mousePosition, setMousePosition] = useState<{ x: number | null; y: number | null }>({ x: null, y: null });
   const containerRef = useRef<HTMLDivElement>(null);
   const updateMousePosition = (e: MouseEvent) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (rect) {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
       setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     }
   };
 
   useEffect(() => {
-    const container = containerRef.current;
-    container?.addEventListener("mousemove", updateMousePosition);
+    if (containerRef.current) {
+      containerRef.current.addEventListener("mousemove", updateMousePosition);
+    }
     return () => {
-      if (container) {
-        container.removeEventListener("mousemove", updateMousePosition);
+      if (containerRef.current) {
+        containerRef.current.removeEventListener(
+          "mousemove",
+          updateMousePosition
+        );
       }
     };
   }, []);
   const maskSize = isHovered ? revealSize : size;
-  
+
   return (
     <motion.div
       ref={containerRef}
@@ -48,8 +52,8 @@ export const MaskContainer = ({
       <motion.div
         className="w-full h-full flex items-center justify-center text-6xl absolute bg-black bg-grid-white/[0.2] text-white [mask-image:url(/mask.svg)] [mask-size:40px] [mask-repeat:no-repeat]"
         animate={{
-          maskPosition: `${mousePosition.x ?? 0 - maskSize / 2}px ${
-            mousePosition.y ?? 0 - maskSize / 2
+          maskPosition: `${(mousePosition.x ?? 0) - maskSize / 2}px ${
+            (mousePosition.y ?? 0) - maskSize / 2
           }px`,
           maskSize: `${maskSize}px`,
         }}
