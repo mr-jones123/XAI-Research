@@ -26,17 +26,15 @@ const Intro = () => {
               clarity and transparency by explaining every AI decision in a way
               you can trust.
             </p>
-            <Link href="/chatbot">
-              <Button size="lg" className="bg-blue-500 hover:bg-blue-600 mt-5">
-                Get Started
-              </Button>
-            </Link>
+            <Button size="lg" className="bg-blue-500 hover:bg-blue-600 mt-5 hover:cursor">
+              <Link href="/chatbot">Get Started</Link>
+            </Button>
           </section>
-          
+
           <section>
             <ContainerScroll>
               <Image
-                src={"/aiverson-pic.jpg"}
+                src={"/ai-assistant.png"}
                 width={200}
                 height={200}
                 alt="Si Aiverson"
@@ -45,9 +43,8 @@ const Intro = () => {
           </section>
 
           <section>
-              <MaskedEffect/>
+            <MaskedEffect />
           </section>
-
         </main>
       </div>
     </div>
