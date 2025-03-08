@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ProfileCard } from "@/components/profile";
 import ProfileDialog from "./dialog";
 
-const Developers = [
+const developers = [
   {
     name: "Xynil Jhed Lacap",
     role: "Full-Stack Developer && Project Manager",
@@ -27,11 +27,11 @@ const Developers = [
 ];
 
 export const About = () => {
-  const [selectedDev, setSelectedDev] = useState<(typeof Developers)[0] | null>(
+  const [selectedDev, setSelectedDev] = useState<(typeof developers)[0] | null>(
     null
   );
 
-  const handleOpenDialog = (developer: (typeof Developers)[0]) => {
+  const handleOpenDialog = (developer: (typeof developers)[0]) => {
     setSelectedDev(developer);
   };
 
@@ -46,7 +46,7 @@ export const About = () => {
           Meet the Team
         </h1>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {Developers.map((developer, index) => (
+          {developers.map((developer, index) => (
             <ProfileCard
               key={index}
               name={developer.name}
