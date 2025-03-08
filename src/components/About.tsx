@@ -6,22 +6,22 @@ import ProfileDialog from "./dialog";
 const Developers = [
   {
     name: "Xynil Jhed Lacap",
-    role: "Project Manager",
+    role: "Full-Stack Developer && Project Manager",
     image: "/xynil-pic.jpg",
   },
   {
     name: "Janna Andrea Justiniano",
-    role: "Fullstack/UI/UX",
+    role: "UI/UX",
     image: "/janna-pic.jpg",
   },
   {
     name: "John Aiverson Abong",
-    role: "Docs/UI/QA",
+    role: "Docs",
     image: "/aiverson-pic.jpg",
   },
   {
     name: "Raphael Andre Mercado",
-    role: "Fullstack",
+    role: "Front-end",
     image: "/mercado-pic.jpg",
   },
 ];

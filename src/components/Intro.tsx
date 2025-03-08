@@ -26,9 +26,11 @@ const Intro = () => {
               clarity and transparency by explaining every AI decision in a way
               you can trust.
             </p>
-            <Button size="lg" className="bg-blue-500 hover:bg-blue-600 mt-5 hover:cursor">
-              <Link href="/chatbot">Get Started</Link>
-            </Button>
+            <Link href="/chatbot">
+              <Button className="bg-blue-500 hover:bg-blue-600 mt-5">
+                Get Started
+              </Button> 
+            </Link>
           </section>
 
           <section>
@@ -42,8 +44,7 @@ const Intro = () => {
             </ContainerScroll>
           </section>
 
-            <MaskedEffect />
-
+          <MaskedEffect />
         </main>
       </div>
     </div>
