@@ -26,7 +26,7 @@ const Developers = [
   },
 ];
 
-export const About = () => {
+const About = () => {
   const [selectedDev, setSelectedDev] = useState<(typeof Developers)[0] | null>(
     null
   );
