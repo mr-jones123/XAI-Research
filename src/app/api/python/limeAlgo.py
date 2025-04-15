@@ -1,54 +1,60 @@
 from groq import Groq
 from lime.lime_text import LimeTextExplainer
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForSequenceClassification,AutoTokenizer
 import torch.nn.functional as F
 import torch
 import numpy as np
 from flask import Flask, request, jsonify   
+from flask_cors import CORS
 
 app = Flask(__name__)
-
-from transformers import AutoTokenizer, AutoModelForCausalLM
+CORS(app)  # Enable CORS for all routes
 try:
-    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
-    model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
+    tokenizer = AutoTokenizer.from_pretrained("nlptown/bert-base-multilingual-uncased-sentiment")
+    model = AutoModelForSequenceClassification.from_pretrained("nlptown/bert-base-multilingual-uncased-sentiment")
     print("Model and tokenizer loaded successfully!")
 except Exception as e:
     print(f"Error loading model and tokenizer: {e}")
 
 def lime_prediction_function(text_inputs):
-      # The quick brown fox
     prob_scores = []
     for text in text_inputs:
-        # Tokenize input
         inputs = tokenizer(text, return_tensors="pt", truncation=True)
-        input_ids = inputs.input_ids # indicies for tokens
+        input_ids = inputs.input_ids
     
         with torch.no_grad():
-            outputs = model(input_ids)   # turn tokens into logits
+            outputs = model(input_ids)
         
-        logits = outputs.logits   
-        softmax_probs = F.softmax(logits, dim=-1)  # Convert logits to probabilities
+        logits = outputs.logits
+        softmax_probs = F.softmax(logits, dim=-1)
         
-        # Get probability of the most likely next token
-        last_token_id = input_ids[0, -1]  
-        last_token_prob = softmax_probs[0, -2, last_token_id]  
-        
-        prob_scores.append([last_token_prob.item(), 1 - last_token_prob.item()])
+        # Get the probability scores for each class
+        prob_scores.append(softmax_probs[0].tolist())
 
     return np.array(prob_scores)  # Convert to NumPy array for LIME compatibility
 
 def gptResponse(text):
-    inputs = tokenizer.encode(text, return_tensors="pt")
-    outputs = model.generate(inputs, max_length=200, do_sample=True, num_beams=5, no_repeat_ngram_size=2, early_stopping=True)
-    text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    # printing output
-    return text 
+    # For sentiment analysis, we'll use the model's classification capabilities
+    inputs = tokenizer(text, return_tensors="pt", truncation=True)
+    with torch.no_grad():
+        outputs = model(**inputs)
+        logits = outputs.logits
+        probabilities = F.softmax(logits, dim=-1)
+        predicted_class = torch.argmax(probabilities, dim=-1).item()
+        
+        # Map the predicted class to a sentiment response
+        sentiment_responses = {
+            0: "This text expresses very negative sentiment.",
+            1: "This text expresses negative sentiment.",
+            2: "This text expresses neutral sentiment.",
+            3: "This text expresses positive sentiment.",
+            4: "This text expresses very positive sentiment."
+        }
+        return sentiment_responses.get(predicted_class, "Unable to determine sentiment.")
 
 # Handle POST request from the user and passes it back onto the route.ts backend
 @app.route("/lime-algorithm", methods=["POST"])
 def limeAlgorithm():
-
     try: 
         data = request.get_json()  # Get JSON data from the request
         if not data or "input" not in data:

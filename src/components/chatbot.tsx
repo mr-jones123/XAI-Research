@@ -5,7 +5,7 @@
   import { Card, CardContent } from "@/components/ui/card";
 
   interface ResponseType {
-    explanation: string;
+    // explanation: string;
     AIResponse : string;
     LIMEOutput: string;
   }
@@ -18,7 +18,7 @@
     const handleSubmit = async () => {
       setLoading(true);
       try {
-        const res = await fetch("/api/chat", {
+        const res = await fetch("http://localhost:5000/lime-algorithm", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -30,13 +30,13 @@
           throw new Error(`Server error: ${res.status}`);  // Handle non-200 responses
         }
     
-        const text = await res.text();  // Read response as text first
+        const text = await res.text();  
     
         if (!text) {
-          throw new Error("Empty response from server");  // Handle empty responses
+          throw new Error("Empty response from server"); 
         }
     
-        const data = JSON.parse(text);  // Convert text to JSON
+        const data = JSON.parse(text);  
         setResponse(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -61,7 +61,6 @@
             <CardContent className="p-4">
               <p className="text-lg font-bold italic">AI Response: {response.AIResponse}</p>
               <p className="text-lg font-semibold">Explanation:</p>
-              <p className="mb-2">{response.explanation}</p>
               <hr className="my-2" />
               <p>LIME Output: <strong>{response.LIMEOutput}</strong></p>
             </CardContent>
