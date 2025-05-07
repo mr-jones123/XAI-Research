@@ -1,30 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { ProfileCard } from "@/components/profile";
+import { ProfileCard } from "@/components/ProfileCard";
 import ProfileDialog from "./dialog";
+import { getDevelopers } from "@/lib/team";
 
-const developers = [
-  {
-    name: "Xynil Jhed Lacap",
-    role: "Full-Stack Developer && Project Manager",
-    image: "/xynil-pic.jpg",
-  },
-  {
-    name: "Janna Andrea Justiniano",
-    role: "UI/UX",
-    image: "/janna-pic.jpg",
-  },
-  {
-    name: "John Aiverson Abong",
-    role: "Docs",
-    image: "/aiverson-pic.jpg",
-  },
-  {
-    name: "Raphael Andre Mercado",
-    role: "Front-end",
-    image: "/mercado-pic.jpg",
-  },
-];
+const developers = getDevelopers();
 
 export const About = () => {
   const [selectedDev, setSelectedDev] = useState<(typeof developers)[0] | null>(
