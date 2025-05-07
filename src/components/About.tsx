@@ -32,6 +32,8 @@ export const About = () => {
               name={developer.name}
               role={developer.role}
               image={developer.image}
+              linkedinUrl={developer.linkedinUrl}
+              githubUrl={developer.githubUrl}
               onClick={() => handleOpenDialog(developer)}
             />
           ))}

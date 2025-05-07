@@ -7,6 +7,8 @@ interface ResponseType {
   AIResponse: string;
   rawPredictions: number[];
   LIMEOutput: string;
+  predicted_confidence: number;
+  local_fidelity: number;
 }
 
 export default function Chatbot() {
@@ -47,6 +49,11 @@ export default function Chatbot() {
         console.error("Error handling LIME Output:", error);
       }
       setLoading(false);
+      return data.AIResponse;
+    } catch (error) {
+      console.error("Error submitting input:", error);
+      setLoading(false);
+      return `Error: ${error instanceof Error ? error.message : "Unknown error"}`;
     }
   };
 
@@ -60,7 +67,7 @@ export default function Chatbot() {
 
       {/* Explanation panel only renders when there's data */}
       {response && (
-        <div className="w-[350px] hidden md:block">
+        <div className="w-[500px] hidden md:block">
           <ExplanationPanel aiDetails={response} />
         </div>
       )}
