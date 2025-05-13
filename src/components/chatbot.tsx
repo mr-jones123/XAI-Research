@@ -16,7 +16,7 @@ export default function Chatbot() {
   const handleSubmit = async (input: string): Promise<string> => {
     setLoading(true);
     try {
-      const res = await fetch(process.env.FLASK_ENDPOINT as string, {
+      const res = await fetch(process.env.NEXT_PUBLIC_FLASK_ENDPOINT as string, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,33 +54,6 @@ export default function Chatbot() {
   };
 
   return (
-    /*<div className="max-w-xl mx-auto p-4">
-      <h1 className="text-xl font-bold mb-4">XAI Chatbot</h1>
-      <div className="flex gap-2 mb-4">
-        <Input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter a sentence..."
-        />
-        <Button onClick={handleSubmit} disabled={loading}>
-          {loading ? "Analyzing..." : "Submit"}
-        </Button>
-      </div>
-      {response && (
-        <Card className="mt-4">
-          <CardContent className="p-4">
-            <p className="text-lg font-bold italic">
-              AI Response: {response.AIResponse}
-            </p>
-            <p className="text-lg font-semibold">Explanation:</p>
-            <hr className="my-2" />
-            <p>
-              LIME Output: <strong>{response.LIMEOutput}</strong>
-            </p>
-          </CardContent>
-        </Card>
-      )}
-    </div>*/
     <div className="flex max-w-7xl mx-auto p-4 h-[100dvh] gap-4">
       {/* Chat takes up full space when no explanation, otherwise flex-1 */}
       <div className={response ? "flex-1" : "w-full"}>
