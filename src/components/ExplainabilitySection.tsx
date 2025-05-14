@@ -1,14 +1,13 @@
 import { Info, CheckCircle, BarChart2 } from "lucide-react"
 
-const ExplainabilitySection = () => {
-  return (
-    <section className="pt-20 pb-10 bg-gradient-to-br from-blue-50/50 to-white rounded-3xl my-10">
+const ExplainabilitySection = () => {  return (
+    <section className="pt-10 sm:pt-16 md:pt-20 pb-6 sm:pb-8 md:pb-10 bg-gradient-to-br from-blue-50/50 to-white rounded-2xl sm:rounded-3xl my-6 sm:my-8 md:my-10">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left side - Phone mockup */}
-          <div className="relative mx-auto max-w-sm">
-            <div className="bg-gray-900 rounded-[40px] p-2 shadow-xl border-4 border-gray-800">
-              <div className="bg-white rounded-[32px] overflow-hidden h-[580px] relative">
+          <div className="relative mx-auto max-w-xs sm:max-w-sm">
+            <div className="bg-gray-900 rounded-[30px] sm:rounded-[40px] p-1.5 sm:p-2 shadow-xl border-2 sm:border-4 border-gray-800">
+              <div className="bg-white rounded-[24px] sm:rounded-[32px] overflow-hidden h-[400px] sm:h-[480px] md:h-[580px] relative">
                 {/* Phone status bar */}
                 <div className="bg-gray-100 p-2 flex justify-between items-center">
                   <div className="text-xs font-medium">9:41</div>

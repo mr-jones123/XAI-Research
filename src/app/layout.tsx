@@ -23,11 +23,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" className={`${sentient.variable} ${geist.variable}`}>
-      <body>
+  return (    <html lang="en" className={`${sentient.variable} ${geist.variable} scroll-smooth`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body className="antialiased">
         <NavBarWrapper />
-        {children}
+        <div className="flex flex-col min-h-screen">
+          {children}
+        </div>
       </body>
     </html>
   );
