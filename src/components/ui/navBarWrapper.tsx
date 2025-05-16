@@ -6,5 +6,5 @@ import NavBar from "@/components/NavBar";
 export default function NavBarWrapper() {
   const pathname = usePathname();
 
-  return pathname !== "/chatbot" ? <NavBar /> : null;
+  return pathname !== "/chatbot" && "/error" ? <NavBar /> : null;
 }

@@ -3,7 +3,7 @@ import RegisterUI from "@/components/register";
 
 export default function registerPage() {
   return (
-    <div className="">
+    <div>
       <RegisterUI />
     </div>
   );

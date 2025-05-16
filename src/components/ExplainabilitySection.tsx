@@ -1,14 +1,13 @@
-import { Info, AlertCircle, CheckCircle } from "lucide-react"
+import { Info, CheckCircle, BarChart2 } from "lucide-react"
 
-const ExplainabilitySection = () => {
-  return (
-    <section className="pt-20 pb-10 bg-gradient-to-br from-blue-50/50 to-white rounded-3xl my-10">
+const ExplainabilitySection = () => {  return (
+    <section className="pt-10 sm:pt-16 md:pt-20 pb-6 sm:pb-8 md:pb-10 bg-gradient-to-br from-blue-50/50 to-white rounded-2xl sm:rounded-3xl my-6 sm:my-8 md:my-10">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left side - Phone mockup */}
-          <div className="relative mx-auto max-w-sm">
-            <div className="bg-gray-900 rounded-[40px] p-2 shadow-xl border-4 border-gray-800">
-              <div className="bg-white rounded-[32px] overflow-hidden h-[580px] relative">
+          <div className="relative mx-auto max-w-xs sm:max-w-sm">
+            <div className="bg-gray-900 rounded-[30px] sm:rounded-[40px] p-1.5 sm:p-2 shadow-xl border-2 sm:border-4 border-gray-800">
+              <div className="bg-white rounded-[24px] sm:rounded-[32px] overflow-hidden h-[400px] sm:h-[480px] md:h-[580px] relative">
                 {/* Phone status bar */}
                 <div className="bg-gray-100 p-2 flex justify-between items-center">
                   <div className="text-xs font-medium">9:41</div>
@@ -32,52 +31,118 @@ const ExplainabilitySection = () => {
 
                 {/* Chat content */}
                 <div className="p-3 h-[450px] overflow-y-auto bg-gray-50">
-                  {/* User message */}
+                  {/* Step 1: User Input */}
                   <div className="flex justify-end mb-4">
                     <div className="bg-gray-200 rounded-2xl rounded-tr-sm p-3 max-w-[80%]">
-                      <p className="text-sm">Why should I trust this recommendation?</p>
+                      <p className="text-sm">How do neural networks make decisions?</p>
                     </div>
                   </div>
 
-                  {/* AI response */}
+                  {/* Step 2: AI Output */}
                   <div className="flex mb-4">
                     <div className="bg-blue-500 text-white rounded-2xl rounded-tl-sm p-3 max-w-[80%]">
                       <p className="text-sm">
-                        Based on your financial history and goals, I recommend this investment strategy.
+                        Neural networks make decisions through a process of weighted connections between artificial
+                        neurons. They learn by adjusting these weights during training, allowing them to recognize
+                        patterns in data. When presented with new inputs, they process this information through multiple
+                        layers, with each neuron applying an activation function to determine its output.
                       </p>
                     </div>
                   </div>
 
-                  {/* User follow-up */}
-                  <div className="flex justify-end mb-4">
-                    <div className="bg-gray-200 rounded-2xl rounded-tr-sm p-3 max-w-[80%]">
-                      <p className="text-sm">Can you explain how you reached this conclusion?</p>
+                  {/* Step 3: Token Weight Visualization */}
+                  <div className="bg-white border border-blue-200 rounded-xl p-4 shadow-sm mb-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <BarChart2 size={18} className="text-blue-500" />
+                      <p className="text-sm font-medium text-blue-700">Token Weight Analysis</p>
                     </div>
-                  </div>
 
-                  {/* AI explanation */}
-                  <div className="flex mb-4">
-                    <div className="bg-blue-500 text-white rounded-2xl rounded-tl-sm p-3 max-w-[80%]">
-                      <p className="text-sm">Here&apos;s my reasoning:</p>
-                      <div className="mt-2 p-2 bg-blue-600 rounded-lg text-xs">
-                        <p className="mb-1">• Your risk tolerance score: 7/10</p>
-                        <p className="mb-1">• Time horizon: 15+ years</p>
-                        <p className="mb-1">• Key factors: retirement goals, market conditions</p>
-                        <p>• Confidence level: 87%</p>
+                    <p className="text-xs text-gray-600 mb-3">
+                      Token weights showing influence of each word on the response:
+                    </p>
+
+                    {/* Literal bar graph with token weights */}
+                    <div className="bg-blue-50 rounded-lg p-3">
+                      {/* The actual bar graph */}
+                      <div className="h-[140px] flex items-end justify-between gap-1 mb-2 pt-3 border-b border-gray-300 relative">
+                        {/* Y-axis labels */}
+                        <div className="absolute -left-2 top-0 bottom-0 w-8 flex flex-col justify-between text-[9px] text-gray-500">
+                          <span>2.0</span>
+                          <span>1.5</span>
+                          <span>1.0</span>
+                          <span>0.5</span>
+                          <span>0.0</span>
+                        </div>
+
+                        {/* Horizontal grid lines */}
+                        <div className="absolute left-6 right-0 top-0 bottom-0 flex flex-col justify-between">
+                          <div className="border-t border-dashed border-gray-300 w-full h-0"></div>
+                          <div className="border-t border-dashed border-gray-300 w-full h-0"></div>
+                          <div className="border-t border-dashed border-gray-300 w-full h-0"></div>
+                          <div className="border-t border-dashed border-gray-300 w-full h-0"></div>
+                          <div className="border-t border-dashed border-gray-300 w-full h-0"></div>
+                        </div>
+
+                        {/* Bars */}
+                        <div className="flex-1 flex flex-col items-center">
+                          <div className="bg-blue-300 w-6 rounded-t-sm" style={{ height: "30px" }}></div>
+                          <span className="text-[9px] mt-1 text-gray-600">how</span>
+                          <span className="text-[8px] text-blue-700 font-medium">0.43</span>
+                        </div>
+
+                        <div className="flex-1 flex flex-col items-center">
+                          <div className="bg-blue-300 w-6 rounded-t-sm" style={{ height: "20px" }}></div>
+                          <span className="text-[9px] mt-1 text-gray-600">do</span>
+                          <span className="text-[8px] text-blue-700 font-medium">0.28</span>
+                        </div>
+
+                        <div className="flex-1 flex flex-col items-center">
+                          <div className="bg-blue-600 w-6 rounded-t-sm" style={{ height: "120px" }}></div>
+                          <span className="text-[9px] mt-1 text-gray-600">neural</span>
+                          <span className="text-[8px] text-blue-700 font-medium">1.79</span>
+                        </div>
+
+                        <div className="flex-1 flex flex-col items-center">
+                          <div className="bg-blue-600 w-6 rounded-t-sm" style={{ height: "115px" }}></div>
+                          <span className="text-[9px] mt-1 text-gray-600">networks</span>
+                          <span className="text-[8px] text-blue-700 font-medium">1.68</span>
+                        </div>
+
+                        <div className="flex-1 flex flex-col items-center">
+                          <div className="bg-blue-500 w-6 rounded-t-sm" style={{ height: "70px" }}></div>
+                          <span className="text-[9px] mt-1 text-gray-600">make</span>
+                          <span className="text-[8px] text-blue-700 font-medium">0.97</span>
+                        </div>
+
+                        <div className="flex-1 flex flex-col items-center">
+                          <div className="bg-blue-600 w-6 rounded-t-sm" style={{ height: "110px" }}></div>
+                          <span className="text-[9px] mt-1 text-gray-600">decisions</span>
+                          <span className="text-[8px] text-blue-700 font-medium">1.62</span>
+                        </div>
+
+                        <div className="flex-1 flex flex-col items-center">
+                          <div className="bg-blue-200 w-6 rounded-t-sm" style={{ height: "10px" }}></div>
+                          <span className="text-[9px] mt-1 text-gray-600">?</span>
+                          <span className="text-[8px] text-blue-700 font-medium">0.12</span>
+                        </div>
                       </div>
-                      <p className="text-xs mt-2">Tap for detailed explanation →</p>
-                    </div>
-                  </div>
 
-                  {/* Explainability feature highlight */}
-                  <div className="bg-white border border-blue-200 rounded-xl p-3 shadow-sm mb-4">
-                    <div className="flex items-center gap-2 text-blue-600 text-sm font-medium mb-2">
-                      <AlertCircle size={16} />
-                      <span>Explainability Feature</span>
+                      {/* Legend */}
+                      <div className="flex justify-between items-center mt-2">
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 bg-blue-600 rounded-sm"></div>
+                          <span className="text-[9px] text-gray-600">High influence</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 bg-blue-300 rounded-sm"></div>
+                          <span className="text-[9px] text-gray-600">Low influence</span>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-xs text-gray-600">
-                      This AI provides transparent reasoning behind its recommendations, allowing you to understand and
-                      verify its decision process.
+
+                    <p className="text-xs text-gray-600 mt-3">
+                      The tokens &quot;neural&quot; (1.79), &quot;networks&quot; (1.68), and &quot;decisions&quot; (1.62) have the highest weights,
+                      indicating they most strongly influenced the model&apos;s response.
                     </p>
                   </div>
                 </div>
@@ -139,7 +204,8 @@ const ExplainabilitySection = () => {
                   decisions.&quot;
                 </p>
                 <p className="text-sm text-gray-500 mt-2">
-                  — Ribeiro et al., &quot;Why Should I Trust You?&quot;: Explaining the Predictions of Any Classifier (2016)
+                  — Ribeiro et al., &quot;Why Should I Trust You?&quot;: Explaining the Predictions of Any Classifier
+                  (2016)
                 </p>
               </div>
 

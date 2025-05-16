@@ -1,16 +1,20 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import Image from "next/image";
 
 const links = [
   { name: "Dashboard", href: "../dashboard" },
@@ -18,6 +22,17 @@ const links = [
 ];
 
 const SidebarComponent = () => {
+  const [user, setUser] = useState<any>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+    fetchUser();
+  }, []);
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -45,6 +60,38 @@ const SidebarComponent = () => {
           {/*implement history chatbot backend*/}
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarSeparator />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild className="p-2 h-auto">
+              <Link href="/dashboard">
+                {user && (
+                  <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center space-x-3">
+                      <Image
+                        src={
+                          user.user_metadata?.avatar_url ||
+                          "/default-avatar.png"
+                        }
+                        alt="User Avatar"
+                        width={25}
+                        height={25}
+                        className="rounded-full"
+                      />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          {user.user_metadata?.full_name || user.email}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 };

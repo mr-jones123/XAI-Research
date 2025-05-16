@@ -9,11 +9,11 @@ import Link from "next/link";
 
 export default function FooterSection() {
   return (
-    <footer className="w-full bg-background px-4">
+    <footer className="w-full bg-background px-4 py-6">
       <div className="mx-auto max-w-container">
         <Footer>
           <FooterContent>
-            <FooterColumn className="col-span-2 sm:col-span-3 md:col-span-1">
+            <FooterColumn className="col-span-4 sm:col-span-2 md:col-span-1">
               <div className="flex items-center gap-2">
                 <Image
                   src="/XeeAI Logo (Draft).svg"
@@ -25,7 +25,7 @@ export default function FooterSection() {
                 <h3 className="text-xl font-bold">XeeAI</h3>
               </div>
             </FooterColumn>
-            <FooterColumn>
+            <FooterColumn className="col-span-2 sm:col-span-1">
               <h3 className="text-md pt-1 font-semibold">Product</h3>
               <Link href="/" className="text-sm text-muted-foreground">
                 Changelog
@@ -34,7 +34,7 @@ export default function FooterSection() {
                 Documentation
               </Link>
             </FooterColumn>
-            <FooterColumn>
+            <FooterColumn className="col-span-2 sm:col-span-1">
               <h3 className="text-md pt-1 font-semibold">Company</h3>
               <Link href="/" className="text-sm text-muted-foreground">
                 About
@@ -46,22 +46,24 @@ export default function FooterSection() {
                 Blog
               </Link>
             </FooterColumn>
-            <FooterColumn>
+            <FooterColumn className="col-span-4 sm:col-span-2 md:col-span-1">
               <h3 className="text-md pt-1 font-semibold">Contact</h3>
-              <Link href="/" className="text-sm text-muted-foreground">
-                Discord
-              </Link>
-              <Link href="/" className="text-sm text-muted-foreground">
-                Twitter
-              </Link>
-              <Link href="/" className="text-sm text-muted-foreground">
-                Github
-              </Link>
+              <div className="flex flex-wrap gap-x-4 sm:gap-x-0 sm:flex-col">
+                <Link href="/" className="text-sm text-muted-foreground">
+                  Discord
+                </Link>
+                <Link href="/" className="text-sm text-muted-foreground">
+                  Twitter
+                </Link>
+                <Link href="/" className="text-sm text-muted-foreground">
+                  Github
+                </Link>
+              </div>
             </FooterColumn>
           </FooterContent>
-          <FooterBottom>
-            <div>© 2025 Mikołaj Dobrucki. All rights reserved</div>
-            <div className="flex items-center gap-4">
+          <FooterBottom className="flex-col sm:flex-row gap-4 sm:gap-0">
+            <div className="text-center sm:text-left text-sm">© 2025 Mikołaj Dobrucki. All rights reserved</div>
+            <div className="flex items-center justify-center sm:justify-end gap-4 text-sm">
               <Link href="/">Privacy Policy</Link>
               <Link href="/">Terms of Service</Link>
             </div>
