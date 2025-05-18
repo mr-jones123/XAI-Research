@@ -4,11 +4,9 @@ import ChatInterface from "@/components/ChatInterface";
 import ExplanationPanel from "./ExplanationPanel";
 
 interface ResponseType {
-  AIResponse: string;
-  rawPredictions: number[];
-  LIMEOutput: string;
-  predicted_confidence: number;
-  local_fidelity: number;
+    AIResponse: string;
+    LIMEOutput: number[] | string;
+    predictions: number[];
 }
 
 export default function Chatbot() {
@@ -18,7 +16,7 @@ export default function Chatbot() {
   const handleSubmit = async (input: string): Promise<string> => {
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8080/lime-algorithm", {
+      const res = await fetch("http://127.0.0.1:8080/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +40,7 @@ export default function Chatbot() {
       setResponse(data);
       try {
         console.log("LIME Output:", data.LIMEOutput);
-        console.log("Raw Predictions:", data.rawPredictions);
+        console.log("Raw Predictions:", data.predictions);
         console.log("AI Response:", data.AIResponse);
   
       } catch (error) {

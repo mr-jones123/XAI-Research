@@ -3,10 +3,8 @@ import { Card, CardContent } from "./ui/card";
 interface ExplanationPanelProps {
   aiDetails: {
     AIResponse: string;
+    LIMEOutput: number[] | string;
     rawPredictions: number[];
-    LIMEOutput: string;
-    predicted_confidence: number;
-    local_fidelity: number;
   } | null;
 
 }
@@ -29,14 +27,6 @@ export default function ExplanationPanel({ aiDetails }: ExplanationPanelProps) {
           <div>
             <h2 className="text-lg font-bold">LIME Output</h2>
             <p>{aiDetails.LIMEOutput}</p>
-          </div>
-          <div>
-            <h2 className="text-lg font-bold">Predicted Confidence</h2>
-            <p>{aiDetails.predicted_confidence.toFixed(2)}</p>
-          </div>
-          <div>
-            <h2 className="text-lg font-bold">Local Fidelity</h2>
-            <p>{aiDetails.local_fidelity.toFixed(2)}</p>
           </div>
         </div>
       </CardContent>
