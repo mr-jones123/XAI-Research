@@ -3,13 +3,17 @@ import { useState } from "react";
 import ChatInterface from "@/components/ChatInterface";
 import ExplanationPanel from "./ExplanationPanel";
 
+type ChatbotProps = {
+  chatId: string;
+};
+
 interface ResponseType {
   // explanation: string;
   AIResponse: string;
   LIMEOutput: { feature: string; weight: number }[];
 }
 
-export default function Chatbot() {
+export default function Chatbot({ chatId }: ChatbotProps) {
   const [response, setResponse] = useState<ResponseType | null>(null);
   const [loading, setLoading] = useState(false);
 
