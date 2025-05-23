@@ -21,13 +21,18 @@ interface ExplanationPanelProps {
     rawPredictions?: number[]
   } | null
   userQuery: string
+  onWebSearch?: (query: string) => Promise<void>
+  webSearchLoading?: boolean
 }
 
-export default function ExplanationPanel({ aiDetails, userQuery }: ExplanationPanelProps) {
+export default function ExplanationPanel({
+  aiDetails,
+  userQuery,
+  onWebSearch,
+  webSearchLoading = false,
+}: ExplanationPanelProps) {
   const [activeTab, setActiveTab] = useState("overview")
   const [isUncertainResponse, setIsUncertainResponse] = useState(false)
-  const [searchResults, setSearchResults] = useState<string[]>([])
-  const [isSearching, setIsSearching] = useState(false)
 
   useEffect(() => {
     if (aiDetails?.AIResponse) {
@@ -137,33 +142,16 @@ export default function ExplanationPanel({ aiDetails, userQuery }: ExplanationPa
 
   const verdictDisplay = getVerdictDisplay()
 
-
   const localFidelity =
-    aiDetails.localFidelity !== undefined && aiDetails.localFidelity !== null ? aiDetails.localFidelity : 0 
+    aiDetails.localFidelity !== undefined && aiDetails.localFidelity !== null ? aiDetails.localFidelity : 0
 
   const handleWebQuery = async () => {
-    if (!userQuery) return
-    
-    setIsSearching(true)
+    if (!userQuery || !onWebSearch) return
+
     try {
-      const response = await fetch('/api', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query: userQuery }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Search failed')
-      }
-
-      const urls = await response.json()
-      setSearchResults(urls)
+      await onWebSearch(userQuery)
     } catch (error) {
-      console.error('Search error:', error)
-    } finally {
-      setIsSearching(false)
+      console.error("Web search error:", error)
     }
   }
 
@@ -257,33 +245,14 @@ export default function ExplanationPanel({ aiDetails, userQuery }: ExplanationPa
             <div>
               <h3 className="text-sm font-medium text-gray-500 mb-2">DOUBLE CHECK</h3>
               <div className="flex flex-col gap-2">
-                <Button 
+                <Button
                   onClick={handleWebQuery}
-                  disabled={isSearching}
+                  disabled={webSearchLoading || !userQuery}
                   className="flex items-center gap-2 bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100"
                 >
                   <Search className="h-4 w-4" />
-                  {isSearching ? "Searching..." : "Web Search Query"}
+                  {webSearchLoading ? "Searching..." : "Web Search Query"}
                 </Button>
-                {searchResults.length > 0 && (
-                  <div className="mt-2 p-3 bg-gray-50 rounded-md">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Related Sources:</h4>
-                    <ul className="space-y-2">
-                      {searchResults.map((url, index) => (
-                        <li key={index}>
-                          <a 
-                            href={url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline text-sm break-all"
-                          >
-                            {url}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
               </div>
             </div>
           </TabsContent>
@@ -340,16 +309,16 @@ export default function ExplanationPanel({ aiDetails, userQuery }: ExplanationPa
                   stronger influence. Blue bars support the verdict, while red bars contradict it.
                 </p>
               </div>
-                  {aiDetails.localFidelity !== undefined && aiDetails.localFidelity !== null && (
-                  <div className="mt-6">
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">EXPLANATION QUALITY</h3>
-                    <div className="flex items-center">
-                      <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-200">
+              {aiDetails.localFidelity !== undefined && aiDetails.localFidelity !== null && (
+                <div className="mt-6">
+                  <h3 className="text-sm font-medium text-gray-500 mb-2">EXPLANATION QUALITY</h3>
+                  <div className="flex items-center">
+                    <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-200">
                       {(localFidelity * 100).toFixed(1)}%
-                      </Badge>
-                    </div>
+                    </Badge>
                   </div>
-                )}
+                </div>
+              )}
             </div>
           </TabsContent>
         </CardContent>
