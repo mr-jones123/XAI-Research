@@ -1,12 +1,14 @@
 import type React from "react";
 import { MessageSquare, Bot, BarChart2 } from "lucide-react";
 
-const HowItWorks: React.FC = () => {
+const HowItWorks = () => {
   return (
     <section className="py-12 sm:py-16 md:py-24">
       <div className="text-center mb-8 sm:mb-12 md:mb-16">
         <div className="border-t border-gray-200 my-10 sm:my-16 md:my-20"></div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4">How it works?</h2>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4">
+          How it works?
+        </h2>
         <p className="text-gray-500 max-w-2xl mx-auto px-4">
           See how our AI works—get answers, and understand the &lsquo;why&apos;
           behind them.

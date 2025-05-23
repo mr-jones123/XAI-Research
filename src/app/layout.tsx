@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import NavBarWrapper from "@/utils/navBarWrapper";
+import NavBarWrapper from "@/components/ui/navBarWrapper";
 
 const geist = Geist_Mono({
   subsets: ["latin"],
@@ -23,15 +23,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (    <html lang="en" className={`${sentient.variable} ${geist.variable} scroll-smooth`}>
+  return (
+    <html
+      lang="en"
+      className={`${sentient.variable} ${geist.variable} scroll-smooth`}
+    >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className="antialiased">
         <NavBarWrapper />
-        <div className="flex flex-col min-h-screen">
-          {children}
-        </div>
+        <div className="flex flex-col min-h-screen">{children}</div>
       </body>
     </html>
   );

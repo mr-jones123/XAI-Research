@@ -27,7 +27,7 @@ export default function ChatPage() {
     async function saveChatSession() {
       console.log("Attempting to save chat session with ID:", chatid);
       try {
-        await insertChatSession(chatid as string, "anon");
+        await insertChatSession(chatid!);
         console.log("Chat session saved.");
       } catch (error) {
         console.error("Failed to save chat session:", error);

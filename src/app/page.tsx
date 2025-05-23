@@ -6,9 +6,7 @@ export default function Home() {
       <section>
         <Intro />
       </section>
-      <section id="about">
-        {/* About section content if needed */}
-      </section>
+      <section id="about"></section>
       <section>
         <FooterSection />
       </section>

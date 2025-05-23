@@ -14,15 +14,15 @@ export default function Layout({
 }>) {
   return (
     <div className="flex flex-row min-h-screen">
-      <div className="flex-shrink-0">
-        <SidebarProvider>
-          <SidebarComponent />
-          <SidebarTrigger />
-        </SidebarProvider>
-      </div>
-      <main className="flex-1 flex items-center justify-center">
-        {children}
-      </main>
+      <SidebarProvider>
+        <SidebarComponent /> {/* Render the sidebar itself */}
+        <main className="flex-1 flex flex-col">
+          <SidebarTrigger /> {/* Button or trigger to toggle sidebar */}
+          <div className="flex-1 flex items-center justify-center">
+            {children}
+          </div>
+        </main>
+      </SidebarProvider>
     </div>
   );
 }

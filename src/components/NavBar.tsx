@@ -1,16 +1,50 @@
+"use client";
+import { useEffect } from "react";
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
+import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
+//import { signOut } from "@/utils/actions";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const supabase = createClient();
   const pathname = usePathname();
+
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut(); //call client side? wala na exposed na ssr cookies naten
+    setSession(null);
+    router.refresh();
+    redirect("/");
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session);
+      console.log("Session:", session);
+    };
+
+    getSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const linkClass = (href: string) =>
     pathname === href
@@ -35,7 +69,7 @@ const NavBar = () => {
             XeeAI
           </span>
         </Link>
-        
+
         {/* Mobile menu button */}
         <button
           onClick={toggleMenu}
@@ -47,7 +81,7 @@ const NavBar = () => {
           <span className="sr-only">Toggle menu</span>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-        
+
         {/* Navigation links */}
         <div
           className={`${
@@ -55,38 +89,38 @@ const NavBar = () => {
           } absolute top-full left-0 right-0 md:relative md:block md:w-auto bg-white md:bg-transparent shadow-lg md:shadow-none`}
           id="navbar-menu"
         >
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-0 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:items-center md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li>
-              <Link href="/" className={linkClass("/")} onClick={() => setIsOpen(false)}>
+              <Link
+                href="/"
+                className={linkClass("/")}
+                onClick={() => setIsOpen(false)}
+              >
                 Home
               </Link>
             </li>
-            <li>              <Link
-                href="/#about"
-                className={linkClass("/#about")}
-                onClick={() => setIsOpen(false)}
-              >
+            <li>
+              <Link href="/#about" className={linkClass("/#about")}>
                 About
               </Link>
             </li>
-            <li>
-              <Link 
-                href="/register" 
-                className={linkClass("/register")}
-                onClick={() => setIsOpen(false)}
-              >
-                Register
-              </Link>
-            </li>
-            <li>
-              <Link 
-                href="/chatbot" 
-                className="block py-2 px-3 md:p-0 md:py-1 md:px-3 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Try XeeAI
-              </Link>
-            </li>
+            {session ? (
+              <li>
+                <Button
+                  onClick={handleSignOut}
+                  variant="link"
+                  className={`block py-2 px-3 md:p-0 text-gray-900 h-auto font-medium`}
+                >
+                  Sign Out
+                </Button>
+              </li>
+            ) : (
+              <li>
+                <Link href="/register" className={linkClass("/register")}>
+                  Register
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>
