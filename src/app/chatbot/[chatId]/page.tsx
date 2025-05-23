@@ -1,52 +1,75 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Chatbot from "@/components/chatbot";
-import { insertChatSession } from "@/lib/chatApi";
 
 export default function ChatPage() {
   const params = useParams();
-  const [chatid, setChatid] = useState<string | null>(null); // Use null to distinguish between "not set" and "invalid"
+  const router = useRouter();
+  const [chatId, setChatId] = useState<string | null>(null);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">(
+    "loading"
+  );
 
   useEffect(() => {
-    // FIX: Changed params.chatid to params.chatId to match the actual parameter name
-    const paramId = typeof params.chatId === "string" ? params.chatId : null;
-    console.log("Params from useParams():", params);
-    console.log("Extracted chatid:", paramId);
-
-    setChatid(paramId); // Will be either valid string or null
-  }, [params.chatId]); // FIX: Updated dependency to params.chatId
-
-  useEffect(() => {
-    if (!chatid) {
-      console.log("chatid is undefined, not saving session.");
-      return;
-    }
-
-    async function saveChatSession() {
-      console.log("Attempting to save chat session with ID:", chatid);
+    const initializeChat = async () => {
       try {
-        await insertChatSession(chatid!);
-        console.log("Chat session saved.");
+        setStatus("loading");
+        const paramId = Array.isArray(params.chatId)
+          ? params.chatId[0]
+          : params.chatId;
+
+        if (!paramId) {
+          const response = await fetch("/api/chat_sessions/insert", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          });
+
+          const data = await response.json();
+          if (response.ok && data.chatId) {
+            router.replace(`/chatbot/${data.chatId}`);
+            return;
+          }
+          throw new Error(data.error || "Failed to create chat");
+        }
+
+        const saveResponse = await fetch("/api/chat_sessions/insert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chatId: paramId }),
+        });
+
+        if (!saveResponse.ok) {
+          throw new Error("Failed to verify chat session");
+        }
+
+        setChatId(paramId);
+        setStatus("ready");
       } catch (error) {
-        console.error("Failed to save chat session:", error);
+        console.error("Initialization error:", error);
+        setStatus("error");
       }
-    }
+    };
 
-    saveChatSession();
-  }, [chatid]);
+    initializeChat();
+  }, [params.chatId, router]);
 
-  // Still loading chatid from params
-  if (chatid === null) {
-    return <div className="p-4 text-gray-500">Loading...</div>;
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="p-4 text-gray-500">Initializing chat...</div>
+      </div>
+    );
+  }
+
+  if (status === "error") {
+    router.replace("/error");
   }
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen w-full pt-16 pr-4">
-      <div className="w-full px-4 sm:px-12">
-        <Chatbot chatId={chatid} />
-      </div>
+    <div className="w-full px-4 sm:px-12">
+      {chatId && <Chatbot chatId={chatId} />}
     </div>
   );
 }
