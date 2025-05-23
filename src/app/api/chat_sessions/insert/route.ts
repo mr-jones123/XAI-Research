@@ -14,7 +14,6 @@ export async function POST(req: Request) {
     );
   }
 
-
   const { chatId: inputChatId } = await req.json();
   const chatId = inputChatId || uuidv4();
 
