@@ -8,6 +8,11 @@ type LimeDataPoint = {
   weight: number
 }
 
+type ChatbotProps = {
+  chatId: string;
+};
+
+
 interface ResponseType {
   aiDetails: {
     AIResponse: string
@@ -17,7 +22,7 @@ interface ResponseType {
   } | null
 }
 
-export default function Chatbot() {
+export default function Chatbot({ chatId }: ChatbotProps) {
   const [response, setResponse] = useState<ResponseType | null>(null)
   const [loading, setLoading] = useState(false)
   const [currentQuery, setCurrentQuery] = useState<string>("")

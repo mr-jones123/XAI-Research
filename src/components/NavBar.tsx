@@ -20,6 +20,7 @@ const NavBar = () => {
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut(); //call client side? wala na exposed na ssr cookies naten
     setSession(null);
+
     router.refresh();
     redirect("/");
   };
@@ -71,16 +72,17 @@ const NavBar = () => {
         </Link>
 
         {/* Mobile menu button */}
-        <button
+        <Button
           onClick={toggleMenu}
           type="button"
           className="inline-flex items-center p-2 w-10 h-10 justify-center text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
           aria-controls="navbar-menu"
           aria-expanded={isOpen ? "true" : "false"}
+          variant="link"
         >
           <span className="sr-only">Toggle menu</span>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        </Button>
 
         {/* Navigation links */}
         <div

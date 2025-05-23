@@ -1,68 +1,104 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import type React from "react"
+"use client";
+import { Button } from "@/components/ui/button";
+import type React from "react";
 
-import { Input } from "@/components/ui/input"
-import { Send } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
-import LoadingFacts from "./loading-facts"
+import { Input } from "@/components/ui/input";
+import { Send } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import LoadingFacts from "./loading-facts";
 
 interface Message {
-  sender: "user" | "ai"
-  text: string
+  sender: "user" | "ai";
+  text: string;
 }
 
 interface ChatInterfaceProps {
-  onSubmit: (input: string) => Promise<string>
-  loading: boolean
+  onSubmit: (input: string) => Promise<string>;
+  loading: boolean;
 }
 
-export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps) {
-  const [input, setInput] = useState<string>("")
-  const [messages, setMessages] = useState<Message[]>([])
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+export default function ChatInterface({
+  onSubmit,
+  loading,
+}: ChatInterfaceProps) {
+  const [input, setInput] = useState<string>("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
+  // Improved scroll behavior - scroll to bottom when messages change
   useEffect(() => {
-    document.body.style.overflow = "hidden"
-    return () => {
-      document.body.style.overflow = ""
+    if (messagesEndRef.current) {
+      // Use requestAnimationFrame to ensure DOM has updated before scrolling
+      requestAnimationFrame(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      });
     }
-  }, [])
+  }, [messages]);
 
+  // Additional scroll handler for when the container resizes
   useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    });
 
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+    if (messagesContainerRef.current) {
+      observer.observe(messagesContainerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Ensure no scrollbars on body when component mounts
+  useEffect(() => {
+    // Store original overflow settings
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+
+    // Prevent scrolling on body/html
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    // Restore original settings on unmount
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+    };
+  }, []);
 
   const handleSend = async () => {
     if (!input.trim()) {
-      return
+      return;
     }
 
-    const userMessage: Message = { sender: "user", text: input }
-    setMessages((prev) => [...prev, userMessage])
+    const userMessage: Message = { sender: "user", text: input };
+    setMessages((prev) => [...prev, userMessage]);
 
-    setInput("")
+    setInput("");
 
     try {
-      const ai_Response = await onSubmit(input)
-      const ai_Message: Message = { sender: "ai", text: ai_Response }
-      setMessages((prev) => [...prev, ai_Message])
+      const ai_Response = await onSubmit(input);
+      const ai_Message: Message = { sender: "ai", text: ai_Response };
+      setMessages((prev) => [...prev, ai_Message]);
     } catch (error) {
       const errorMessage: Message = {
         sender: "ai",
         text: `Sorry, something went wrong. ${error}`,
-      }
-      setMessages((prev) => [...prev, errorMessage])
+      };
+      setMessages((prev) => [...prev, errorMessage]);
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey && !loading) {
-      e.preventDefault()
-      handleSend()
+      e.preventDefault();
+      handleSend();
     }
-  }
+  };
 
   const inputComponent = (
     <div className="relative">
@@ -82,34 +118,53 @@ export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps)
         <Send className="w-4 h-4"></Send>
       </Button>
     </div>
-  )
+  );
 
   return (
-    <div className="flex flex-col min-h-screen relative overflow-auto">
+    <div className="flex flex-col h-screen relative overflow-hidden">
       {messages.length === 0 ? (
-        <div className="flex flex-col items-center justify-start flex-1 p-4 md:p-6 pt-12">
+        <div
+          ref={messagesContainerRef}
+          className="flex-1 overflow-y-auto pb-24 p-4 md:p-6 scrollbar-thin"
+        >
           <div className="w-full max-w-3xl mx-auto text-center">
             <h1 className="text-3xl font-bold mb-3">Welcome to XeeAI</h1>
-            <p className="text-gray-600 mb-6 font-geist font-bold">Your AI assistant for identifying fake news in captions</p>
+            <p className="text-gray-600 mb-6 font-geist font-bold">
+              Your AI assistant for identifying fake news in captions
+            </p>
 
             {/* Tutorial section */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8 text-left font-geist">
-              <h2 className="text-xl font-semibold text-blue-800 mb-3">How It Works</h2>
+              <h2 className="text-xl font-semibold text-blue-800 mb-3">
+                How It Works
+              </h2>
               <p className="mb-4">
-                XeeAI analyzes Philippine articles from political, entertainment, and opinion articles to classify whether it comes from a <span className="font-bold">verified source</span> or a <span className="font-bold">fake one. </span>
-                 After that, the Explainable AI Algorithm <span className="font-bold"> LIME (Local Interpretable Model Explanations)</span> will do the following:
+                XeeAI analyzes articles from political, entertainment, and
+                opinion articles to classify whether it comes from a{" "}
+                <span className="font-bold">verified source</span> or a{" "}
+                <span className="font-bold">fake one. </span>
+                After that, the Explainable AI Algorithm{" "}
+                <span className="font-bold">
+                  {" "}
+                  LIME (Local Interpretable Model Explanations)
+                </span>{" "}
+                will do the following:
               </p>
               <ol className="list-decimal pl-5 space-y-2 mb-4">
                 <li>Approximates the behavior of the XeeAI</li>
                 <li>Generates variations of your input to see the change of AI output</li>
                 <li>Show which words or phrases influenced the AI's decision whether the input is <span className="font-bold">verified or not.</span></li>
               </ol>
+              <p className="mb-4">
+                In this way, you can understand how your input affects the model's decision.
+              </p>
 
               {/* Disclaimer */}
               <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mt-4">
                 <p className="text-amber-800 font-medium">Disclaimer</p>
                 <p className="text-amber-700 text-sm">
-                  XeeAI is an AI tool and can make mistakes. Always verify information from multiple reliable sources.
+                  XeeAI is an AI tool and can make mistakes. Always verify
+                  information from multiple reliable sources.
                 </p>
               </div>
             </div>
@@ -125,7 +180,7 @@ export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps)
                   <button
                     key={index}
                     onClick={() => {
-                      setInput(example)
+                      setInput(example);
                     }}
                     className="text-left p-3 bg-gray-100 hover:bg-gray-200 rounded-md text-sm transition-colors"
                   >
@@ -137,14 +192,22 @@ export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps)
           </div>
         </div>
       ) : (
-        <div className="flex-1 overflow-y-auto pb-24 p-4 md:p-6 scrollbar-thin">
+        <div
+          ref={messagesContainerRef}
+          className="flex-1 overflow-y-auto pb-24 p-4 md:p-6 scrollbar-thin"
+        >
           <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((message, index) => (
-              <div key={index} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`max-w-xs md:max-w-md p-4 rounded-lg ${
-                    message.sender === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-900"
+              <div
+                key={index}
+                className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"
                   }`}
+              >
+                <div
+                  className={`max-w-xs md:max-w-md p-4 rounded-lg ${message.sender === "user"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-900"
+                    }`}
                 >
                   {message.text}
                 </div>
@@ -169,5 +232,5 @@ export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps)
         <div className="max-w-3xl mx-auto">{inputComponent}</div>
       </div>
     </div>
-  )
+  );
 }

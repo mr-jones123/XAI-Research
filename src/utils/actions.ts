@@ -113,4 +113,5 @@ const login = async (formData: FormData) => {
    redirect('/');
 }
 
-export { signInWith, signInWithGithub, signInWithGoogle, signInWithEmail, login , signOut};
+
+export { signInWith, signInWithGithub, signInWithGoogle, signInWithEmail, login, signOut };

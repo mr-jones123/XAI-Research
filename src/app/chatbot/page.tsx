@@ -1,11 +1,8 @@
-import Chatbot from "@/components/chatbot";
+// app/chatbot/page.tsx
+import { redirect } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
-export default function Page() {
-  return (
-    <div className="flex flex-col items-center justify-start min-h-screen w-full pr-4">
-      <div className="w-full px-4 sm:px-12">
-        <Chatbot />
-      </div>
-    </div>
-  );
+export default function ChatbotRedirectPage() {
+  const newChatId = uuidv4();
+  redirect(`/chatbot/${newChatId}`);
 }

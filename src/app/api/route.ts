@@ -7,7 +7,7 @@ export async function POST(request: NextRequest){
     const instructions = "Search the web for the most relevant news article to the query:"
     const data = await exa.searchAndContents(instructions + query,   {
         type: "keyword",
-        numResults: 5,
+        numResults: 3,
       }
 )
 

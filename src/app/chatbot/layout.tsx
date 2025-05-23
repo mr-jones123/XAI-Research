@@ -14,6 +14,12 @@ export default function Layout({
 }>) {
   return (
     <div className="flex flex-row min-h-screen">
+      <div className="flex-shrink-0">
+        <SidebarProvider>
+          <SidebarComponent />
+          <SidebarTrigger />
+        </SidebarProvider>
+      </div>
       <main className="flex-1 flex items-center justify-center">
         {children}
       </main>
