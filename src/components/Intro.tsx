@@ -21,7 +21,7 @@ const Intro = () => {
   const handleGetStarted = async (e: React.MouseEvent) => {
     e.preventDefault();
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -51,11 +51,18 @@ const Intro = () => {
             clarity and transparency by explaining every AI decision in a way
             you can trust.
           </p>
-          <Link href="/chatbot">
-            <Button className="bg-blue-500 hover:bg-blue-600 mt-4 md:mt-5 text-sm md:text-base px-4 py-2 md:px-6 md:py-2.5" onClick={handleGetStarted}>
-              Get Started
-            </Button>
-          </Link>
+          <div className="flex justify-center space-x-11">
+            <Link href="/chatbot">
+              <Button className="bg-blue-500 hover:bg-blue-600 mt-4 md:mt-5 text-sm md:text-base px-4 py-2 md:px-6 md:py-2.5" onClick={handleGetStarted}>
+                Get Started
+              </Button>
+            </Link>
+            <Link href="https://acm-0353f194.mintlify.app">
+              <Button className="bg-blue-500 hover:bg-blue-600 mt-4 md:mt-5 text-sm md:text-base px-4 py-2 md:px-6 md:py-2.5">
+                User Manual
+              </Button>
+            </Link>
+          </div>
         </section>
 
         <section>
