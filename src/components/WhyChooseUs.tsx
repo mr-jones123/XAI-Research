@@ -33,7 +33,7 @@ const WhyChooseUs = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4">Why Us</h2>
-          <p className="text-gray-500 max-w-2xl mx-auto px-2">
+          <p className="text-gray-500 max-w-2xl mx-auto px-2 font-geist">
             Our explainable AI platform sets new standards for transparency, trust, and usability in artificial
             intelligence.
           </p>
@@ -49,7 +49,7 @@ const WhyChooseUs = () => {
                 <div className="bg-blue-50 p-2 sm:p-3 rounded-lg sm:rounded-xl">{feature.icon}</div>
                 <div className="text-center sm:text-left">
                   <h3 className="text-lg sm:text-xl font-bold mb-1 sm:mb-2 text-gray-800">{feature.title}</h3>
-                  <p className="text-sm sm:text-base text-gray-600">{feature.description}</p>
+                  <p className="text-sm sm:text-base text-gray-600 font-geist">{feature.description}</p>
                 </div>
               </div>
             </div>

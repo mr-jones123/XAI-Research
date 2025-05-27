@@ -23,7 +23,7 @@ const TeamSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold mb-3 md:mb-4">Our Team</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto px-2">
+          <p className="text-gray-600 max-w-2xl mx-auto px-2 font-geist">
             Meet the experts behind our explainable AI technology, dedicated to
             making AI transparent and trustworthy.
           </p>

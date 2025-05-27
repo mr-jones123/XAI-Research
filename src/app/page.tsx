@@ -8,9 +8,6 @@ export default function Home() {
         <Intro />
       </section>
       <section id="about"></section>
-      <section>
-        <FooterSection />
-      </section>
     </div>
   );
 }

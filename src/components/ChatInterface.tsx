@@ -186,6 +186,12 @@ export default function ChatInterface({
                   We recommend cross-referencing with current sources for the latest information.
                 </p>
               </div>
+              <div className="bg-red-50 border-l-4 border-red-500 p-4 mt-4">
+                <p className="text-amber-800 font-medium">Another Note</p>
+                <p className="text-amber-700 text-sm">
+                    The LIME Algorithm perturbs your input so the longer the text you use (which is totally okay), the longer the response might be. So please bear with us :DD
+                </p>
+              </div>
             </div>
 
             {/* Example prompts */}

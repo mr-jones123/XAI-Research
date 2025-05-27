@@ -105,8 +105,8 @@ def POST_Method():
         if pred_label == 2 or probs.max() < 0.7:
             return jsonify({'AIResponse': "I don't know", 'LIMEOutput': [], 'rawPredictions': probs.tolist()}), 200
 
-        # Otherwise run LIME
-        lime_feats, fidelity = LIME_Algorithm(input_text, pred_label, probs)
+        # Otherwise run LIME - Fixed function call (only 1 parameter)
+        lime_feats, fidelity = LIME_Algorithm(input_text)
         label_map = {0: 'Verified', 1: 'Fake'}
         ai_label = label_map.get(pred_label, "I don't know")
 

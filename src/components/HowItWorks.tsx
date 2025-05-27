@@ -9,7 +9,7 @@ const HowItWorks = () => {
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4">
           How it works?
         </h2>
-        <p className="text-gray-500 max-w-2xl mx-auto px-4">
+        <p className="text-gray-500 max-w-2xl mx-auto px-4 font-geist">
           See how our AI works—get answers, and understand the &lsquo;why&apos;
           behind them.
         </p>
@@ -38,7 +38,7 @@ const HowItWorks = () => {
               </div>
             </div>
             <div className="bg-blue-500 text-white rounded-xl p-4 ml-auto mr-4 max-w-[80%]">
-              <p className="text-sm">How do neural networks make decisions?</p>
+            <p className="text-sm">Si Tatay ay merong jetski at pupunta sya sa WPS!</p>
             </div>
             <div className="mt-4 flex items-center gap-2 bg-white rounded-full p-2 pr-3 border border-gray-200">
               <div className="bg-blue-100 p-2 rounded-full">
@@ -62,8 +62,8 @@ const HowItWorks = () => {
             </div>
           </div>
           <h3 className="text-2xl font-bold mb-2">User Input</h3>
-          <p className="text-gray-500 text-center">
-            Type your question. Our goal isn&apos;t just to answer it, but to
+          <p className="text-gray-500 text-center font-geist">
+            Type your input. Our goal isn&apos;t just to answer it, but to
             help you understand why the AI responded the way it did.
           </p>
         </article>
@@ -76,7 +76,7 @@ const HowItWorks = () => {
               </div>
             </div>
             <div className="bg-blue-500 text-white rounded-xl p-4 mr-auto ml-4 max-w-[80%] mb-4">
-              <p className="text-sm">How do neural networks make decisions?</p>
+              <p className="text-sm">Si Tatay ay merong jetski at pupunta sya sa WPS!</p>
             </div>
             <div className="bg-white rounded-xl shadow-sm p-4">
               <div className="flex items-center gap-2 mb-3">
@@ -92,16 +92,14 @@ const HowItWorks = () => {
               </div>
               <div className="mt-3 flex justify-end">
                 <div className="bg-blue-100 text-blue-500 text-xs px-2 py-1 rounded-md">
-                  See explanation →
+                  LIME Output →
                 </div>
               </div>
             </div>
           </div>
           <h3 className="text-2xl font-bold mb-2">AI Response</h3>
-          <p className="text-gray-500 text-center">
-            The AI shows the thought process behind its response. You&apos;ll
-            see what concepts or sources influenced the answer, so you can
-            understand how and why it arrived at that conclusion
+          <p className="text-gray-500 text-cente font-geist">
+              The AI will respond to your query and it will say whether your input is <span className="font-bold">fake or verified.</span>
           </p>
         </article>
 
@@ -115,7 +113,7 @@ const HowItWorks = () => {
             <div className="bg-white rounded-xl shadow-sm p-4 h-full">
               <div className="flex items-center gap-2 mb-3">
                 <BarChart2 className="h-5 w-5 text-blue-500" />
-                <p className="text-sm font-medium">Explanation</p>
+                <p className="text-sm font-medium">LIME Explanation</p>
               </div>
               <div className="grid grid-cols-2 gap-3 mb-3">
                 <div className="bg-blue-100 rounded-lg p-2">
@@ -140,9 +138,8 @@ const HowItWorks = () => {
             </div>
           </div>
           <h3 className="text-2xl font-bold mb-2">Visual Explanations</h3>
-          <p className="text-gray-500 text-center">
-            Interactive visualizations that break down how different pieces of
-            information affected the AI’s response.
+          <p className="text-gray-500 text-center font-geist">
+            A bar graph where you can see the most influential words that you used in your input.
           </p>
         </article>
       </div>

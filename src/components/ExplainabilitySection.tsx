@@ -178,7 +178,7 @@ const ExplainabilitySection = () => {  return (
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Why Explainability Matters</h2>
 
-            <div className="space-y-4 text-gray-600">
+            <div className="space-y-4 text-gray-600 font-geist">
               <p>
                 Modern AI systems—especially large language models—can generate highly convincing outputs, yet often
                 operate as black boxes, leaving users unsure how or why certain answers are produced. This lack of
