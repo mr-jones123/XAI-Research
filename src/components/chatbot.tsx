@@ -30,9 +30,9 @@ export default function Chatbot({ chatId }: ChatbotProps) {
   const handleSubmit = async (input: string): Promise<string> => {
     setLoading(true)
     setCurrentQuery(input)
-    
-    const tryEndpoint = async (endpoint: string) => {
-      const res = await fetch(endpoint, {
+
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_FLASK_ENDPOINT as string, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,49 +50,30 @@ export default function Chatbot({ chatId }: ChatbotProps) {
         throw new Error("Empty response from server")
       }
 
-      return text
-    }
+      const data = JSON.parse(text)
 
-    try {
-      // Try primary endpoint first
-      let text
-      try {
-        text = await tryEndpoint(process.env.NEXT_PUBLIC_FLASK_ENDPOINT as string)
-      } catch (error) {
-        console.log("Primary endpoint failed, trying fallback...")
-        // Try fallback endpoint
-        text = await tryEndpoint(process.env.NEXT_PUBLIC_FLASK_FALLBACK_ENDPOINT as string)
+      // Transform the data from backend format to match your ResponseType interface
+      const formattedResponse: ResponseType = {
+        aiDetails: {
+          AIResponse: data.AIResponse || "No response provided",
+          LIMEOutput: data.LIMEOutput || [],
+          localFidelity: data.localFidelity || null,
+          rawPredictions: data.rawPredictions || [],
+        },
       }
 
-      try {
-        const data = JSON.parse(text)
+      setResponse(formattedResponse)
 
-        // Transform the data from backend format to match your ResponseType interface
-        const formattedResponse: ResponseType = {
-          aiDetails: {
-            AIResponse: data.AIResponse || "No response provided",
-            LIMEOutput: data.LIMEOutput || [],
-            localFidelity: data.localFidelity || null,
-            rawPredictions: data.rawPredictions || [],
-          },
-        }
-
-        setResponse(formattedResponse)
-
-        if (data.LIMEOutput) {
-          console.log("Parsed LIME Output:", data.LIMEOutput)
-        } else {
-          console.log("No LIME output available in response")
-        }
-
-        return `AI Response: ${data.AIResponse || "No response provided"}`
-      } catch (error) {
-        console.error("Error parsing response:", error)
-        return "Sorry, something went wrong."
+      if (data.LIMEOutput) {
+        console.log("Parsed LIME Output:", data.LIMEOutput)
+      } else {
+        console.log("No LIME output available in response")
       }
+
+      return `AI Response: ${data.AIResponse || "No response provided"}`
     } catch (error) {
       console.error("Error fetching data:", error)
-      return "Sorry, something went wrong."
+      return "Sorry, something went wrong. Please try again later."
     } finally {
       setLoading(false)
     }

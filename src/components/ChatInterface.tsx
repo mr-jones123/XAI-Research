@@ -193,8 +193,8 @@ export default function ChatInterface({
               <h3 className="text-lg font-medium mb-3">Try these examples:</h3>
               <div className="grid gap-2 md:grid-cols-2 max-w-2xl mx-auto font-geist">
                 {[
-                  "Inaresto ng anti-scalawag and intelligence units ng Philippine National Police (PNP) ang isang anti-drug operative ng Pasay City Police Station ngayong araw, matapos na isangkot sa extortion at kidnapping.",
-                  "May bagong paandar angmga anti-DU30, at ito ay pag-po-post ng mga black and white videos ng mga peronalidad sa mundong showbiz at sining kung saan pinahahapyawan nila ang Duterte Administration.",
+                  "Kasama sa programa ang pananalangin, bulaklak at pagsindi ng kandila para sa mga biktima ng massacre. Makikibahagi ang iba ibang kasapi ng media at ang grupo ng National Union of Journalists of the Philippines (NUJP). Ang hindi makakasama na mga kaanak ng Maguindanao massacre victims ngayong Sabado ay inaasahang bukas na lamang tutungo sa site kasama si Department of Secretary (DoJ) Secretary Leila De Lima.",
+                  "May bagong paandar ang mga anti-DU30, at ito ay pag-po-post ng mga black and white videos ng mga peronalidad sa mundong showbiz at sining kung saan pinahahapyawan nila ang Duterte Administration. Ngunit sa serye ng mga videos na kanilang inilathala sa kanilang Facebook page, ang video ni Director Joel Lamangan ang pinagpiyestahan ng husto ng mga netizens.",
                 ].map((example, index) => (
                   <button
                     key={index}
@@ -226,7 +226,19 @@ export default function ChatInterface({
                         <Search className="w-4 h-4" />
                         <span className="font-medium text-sm">Web Search Results</span>
                       </div>
-                      <div className="text-sm">{message.text}</div>
+                      <div className="text-sm">
+                        {message.text.split('\n').map((line, lineIndex) => {
+                          const trimmedLine = line.trim();
+                          if (!trimmedLine) return null;
+                          
+                          return (
+                            <div key={lineIndex} className="flex items-start gap-2 mb-1">
+                              <span className="text-green-600 mt-1">•</span>
+                              <span>{trimmedLine}</span>
+                            </div>
+                          );
+                        }).filter(Boolean)}
+                      </div>
                     </div>
                   ) : (
                     message.text

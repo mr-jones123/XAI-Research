@@ -156,7 +156,7 @@ export default function ExplanationPanel({
   }
 
   return (
-    <Card className="h-full overflow-hidden border-0 shadow-md">
+    <Card className="h-auto overflow-hidden border-0 shadow-md">
       <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b pb-4">
         <CardTitle className="flex items-center text-xl">
           <InfoIcon className="mr-2 h-5 w-5 text-blue-600" />
@@ -305,8 +305,8 @@ export default function ExplanationPanel({
               <div className="mt-6 bg-blue-50 p-4 rounded-md">
                 <h4 className="font-medium text-blue-800 mb-2">Understanding LIME Output</h4>
                 <p className="text-sm text-blue-700">
-                  The chart above shows which words or phrases influenced the AI's decision. Longer bars indicate
-                  stronger influence. Blue bars support the verdict, while red bars contradict it.
+                  The chart above shows which words or phrases influenced the AI’s decision, based on a locally trained explanation model.
+                  Longer bars indicate stronger influence: blue bars (positive weights) increased the AI’s confidence in the predicted class, while red bars (negative weights) decreased it — meaning the model would have been more confident without those words.
                 </p>
               </div>
               {aiDetails.localFidelity !== undefined && aiDetails.localFidelity !== null && (

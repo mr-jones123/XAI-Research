@@ -71,11 +71,7 @@ def bert_response(text):
 
 
 
-def LIME_Algorithm(input_text, pred, prob):
-    # If low confidence, skip LIME
-    if pred == 2 or prob.max() < 0.7:
-        return [], None
-
+def LIME_Algorithm(input_text):
     exp = explainer.explain_instance(
         input_text,
         prediction_function,
