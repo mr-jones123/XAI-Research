@@ -23,7 +23,7 @@ explainer = None
 # For OOD Detection
 in_distribution_mean = None
 in_distribution_inv_covariance = None
-MAHALANOBIS_THRESHOLD = 15.0 # Placeholder threshold
+MAHALANOBIS_THRESHOLD = 26.0 # Placeholder threshold
 
 def load_model_and_ood_stats():
     global tokenizer, model, explainer, in_distribution_mean, in_distribution_inv_covariance
