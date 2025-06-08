@@ -1,10 +1,11 @@
-import React from "react";
-import RegisterUI from "@/components/register";
+"use client";
+import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
 
-export default function registerPage() {
-  return (
-    <div>
-      <RegisterUI />
-    </div>
-  );
+export default function RegisterPage() {
+  useEffect(() => {
+    redirect('/chatbot');
+  }, []);
+
+  return null; // Or some loading indicator if preferred
 }

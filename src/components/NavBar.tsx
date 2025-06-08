@@ -11,41 +11,14 @@ import { Menu, X } from "lucide-react";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [session, setSession] = useState<any>(null);
   const supabase = createClient();
   const pathname = usePathname();
 
   const router = useRouter();
 
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut(); //call client side? wala na exposed na ssr cookies naten
-    setSession(null);
-
-    router.refresh();
-    redirect("/");
-  };
-
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
-  useEffect(() => {
-    const getSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
-      console.log("Session:", session);
-    };
-
-    getSession();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const linkClass = (href: string) =>
     pathname === href
@@ -106,23 +79,6 @@ const NavBar = () => {
                 About
               </Link>
             </li>
-            {session ? (
-              <li>
-                <Button
-                  onClick={handleSignOut}
-                  variant="link"
-                  className={`block py-2 px-3 md:p-0 text-gray-900 h-auto font-medium`}
-                >
-                  Sign Out
-                </Button>
-              </li>
-            ) : (
-              <li>
-                <Link href="/register" className={linkClass("/register")}>
-                  Register
-                </Link>
-              </li>
-            )}
           </ul>
         </div>
       </div>

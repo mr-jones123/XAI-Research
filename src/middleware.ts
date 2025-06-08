@@ -17,36 +17,36 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith(route)
   ); 
 
-  if (isProtected) {
+  // if (isProtected) {
  
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              response.cookies.set(name, value, options)
-            );
-          },
-        },
-      }
-    );
+  //   const supabase = createServerClient(
+  //     process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  //     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  //     {
+  //       cookies: {
+  //         getAll() {
+  //           return request.cookies.getAll();
+  //         },
+  //         setAll(cookiesToSet) {
+  //           cookiesToSet.forEach(({ name, value, options }) =>
+  //             response.cookies.set(name, value, options)
+  //           );
+  //         },
+  //       },
+  //     }
+  //   );
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  //   const {
+  //     data: { user },
+  //   } = await supabase.auth.getUser();
 
    
-    if (!user) {
-      const defaultUrl = new URL("/", request.url);
-      defaultUrl.searchParams.set("auth", "required");
-      return NextResponse.redirect(defaultUrl);
-    }
-  }
+  //   if (!user) {
+  //     const defaultUrl = new URL("/", request.url);
+  //     defaultUrl.searchParams.set("auth", "required");
+  //     return NextResponse.redirect(defaultUrl);
+  //   }
+  // }
 
   return response;
   

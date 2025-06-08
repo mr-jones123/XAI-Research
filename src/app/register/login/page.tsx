@@ -1,10 +1,11 @@
-import LoginUI from "@/components/login";
-import React from "react";
+"use client";
+import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
 
-export default function loginPage() {
-  return (
-    <div>
-      <LoginUI />
-    </div>
-  );
+export default function LoginPage() {
+  useEffect(() => {
+    redirect('/chatbot');
+  }, []);
+
+  return null; // Or some loading indicator if preferred
 }
