@@ -1,20 +1,14 @@
 "use client";
-import { useEffect } from "react";
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { redirect, usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
-//import { signOut } from "@/utils/actions";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const supabase = createClient();
   const pathname = usePathname();
-
-  const router = useRouter();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -77,6 +71,15 @@ const NavBar = () => {
             <li>
               <Link href="/#about" className={linkClass("/#about")}>
                 About
+              </Link>
+            </li>
+            <li>
+              <Link 
+                href="/chatbot" 
+                className={linkClass("/chatbot")}
+                onClick={() => setIsOpen(false)}
+              >
+                Chatbot
               </Link>
             </li>
           </ul>

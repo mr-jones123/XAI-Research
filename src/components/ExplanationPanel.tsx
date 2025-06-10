@@ -5,8 +5,9 @@ import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Too
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { InfoIcon, AlertTriangleIcon, CheckCircleIcon, HelpCircleIcon, Search } from "lucide-react"
+import { InfoIcon, AlertTriangleIcon, CheckCircleIcon, HelpCircleIcon, Search, BadgeInfo } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Tooltip as RechartsTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 type LimeDataPoint = {
   feature: string
@@ -18,7 +19,8 @@ interface ExplanationPanelProps {
     AIResponse: string
     LIMEOutput: Array<LimeDataPoint>
     localFidelity?: number | null
-    rawPredictions?: number[]
+    rawPredictions?: number[],
+    ood_detection?: number | null
   } | null
   userQuery: string
   onWebSearch?: (query: string) => Promise<void>
@@ -59,8 +61,7 @@ export default function ExplanationPanel({
 
   const limeData = isUncertainResponse ? [] : aiDetails.LIMEOutput
 
-  // Process raw predictions to create confidence scores
-  // Default to uncertain if no predictions or uncertain response
+
   const getConfidenceScores = () => {
     if (isUncertainResponse || !aiDetails.rawPredictions || aiDetails.rawPredictions.length === 0) {
       return [
@@ -70,7 +71,7 @@ export default function ExplanationPanel({
       ]
     }
 
-    // Convert raw predictions to percentages
+
     const total = aiDetails.rawPredictions.reduce((sum, val) => sum + val, 0)
 
     const scores = [
@@ -180,6 +181,13 @@ export default function ExplanationPanel({
               disabled={isUncertainResponse || limeData.length === 0}
             >
               LIME Details
+            </TabsTrigger>
+            <TabsTrigger
+              value="quality"
+              className="data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:shadow-none rounded-none h-12"
+              disabled={isUncertainResponse || aiDetails.localFidelity === undefined || aiDetails.localFidelity === null}
+            >
+              Fidelity
             </TabsTrigger>
           </TabsList>
         </div>
@@ -305,20 +313,42 @@ export default function ExplanationPanel({
               <div className="mt-6 bg-blue-50 p-4 rounded-md">
                 <h4 className="font-medium text-blue-800 mb-2">Understanding LIME Output</h4>
                 <p className="text-sm text-blue-700">
-                  The chart above shows which words or phrases influenced the AI’s decision, based on a locally trained explanation model.
-                  Longer bars indicate stronger influence: blue bars (positive weights) increased the AI’s confidence in the predicted class, while red bars (negative weights) decreased it — meaning the model would have been more confident without those words.
+                  The chart above shows which words or phrases influenced the AI's decision, based on a locally trained explanation model.
+                  Longer bars indicate stronger influence: blue bars (positive weights) increased the AI's confidence in the predicted class, while red bars (negative weights) decreased it — meaning the model would have been more confident without those words.
                 </p>
               </div>
-              {aiDetails.localFidelity !== undefined && aiDetails.localFidelity !== null && (
-                <div className="mt-6">
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">EXPLANATION QUALITY</h3>
-                  <div className="flex items-center">
-                    <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-200">
-                      {(localFidelity * 100).toFixed(1)}%
-                    </Badge>
-                  </div>
-                </div>
-              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="quality" className="m-0 p-4">
+            <div>
+              <div className="flex items-center mb-3">
+                <h3 className="text-sm font-medium text-gray-500">EXPLANATION QUALITY</h3>
+                <TooltipProvider>
+                  <RechartsTooltip>
+                    <TooltipTrigger asChild>
+                      <BadgeInfo className="text-gray-500 h-4 w-4 ml-2 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Local fidelity measures how well the LIME explanation approximates the model's behavior around this specific prediction (higher is better)</p>
+                    </TooltipContent>
+                  </RechartsTooltip>
+                </TooltipProvider>
+              </div>
+              
+              <div className="flex items-center mb-4">
+                <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-200">
+                  {(localFidelity * 100).toFixed(1)}%
+                </Badge>
+              </div>
+              
+              <div className="bg-blue-50 p-4 rounded-md">
+                <h4 className="font-medium text-blue-800 mb-2">What This Means</h4>
+                <p className="text-sm text-blue-700">
+                  This score indicates how accurately the LIME explanation represents the AI model's actual decision-making process for this specific input. 
+                  A higher percentage means the explanation is more reliable and trustworthy.
+                </p>
+              </div>
             </div>
           </TabsContent>
         </CardContent>

@@ -1,4 +1,4 @@
-import { SidebarComponent } from "@/components/sidebar";
+import { SidebarComponent } from "@/components/sidebar-new";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 
