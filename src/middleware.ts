@@ -1,55 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { updateSession } from "@/utils/supabase/middleware";
-import { createServerClient } from "@supabase/ssr";
 
-//main middleware component
-
-//adjust kung anong route iproprotect
-const protectedRoutes = ["/chatbot", "/dashboard" , "/error"];
-
+// Simplified middleware - no authentication required
 export async function middleware(request: NextRequest) {
-
-  const { pathname } = request.nextUrl;
-
-  const response = await updateSession(request);
-
-  const isProtected = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  ); 
-
-  if (isProtected) {
- 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              response.cookies.set(name, value, options)
-            );
-          },
-        },
-      }
-    );
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-   
-    if (!user) {
-      const defaultUrl = new URL("/", request.url);
-      defaultUrl.searchParams.set("auth", "required");
-      return NextResponse.redirect(defaultUrl);
-    }
-  }
-
-  return response;
-  
+  return NextResponse.next();
 }
 
 export const config = {

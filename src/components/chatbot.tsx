@@ -17,7 +17,8 @@ interface ResponseType {
     AIResponse: string
     LIMEOutput: Array<LimeDataPoint>
     localFidelity?: number | null
-    rawPredictions?: number[]
+    rawPredictions?: number[],
+    ood_detection? : number | null 
   } | null
 }
 

@@ -15,7 +15,7 @@ EXPOSE 8080
 
 CMD ["gunicorn", \
     "--bind", "0.0.0.0:8080", \
-    "--workers=1", \                  
+    "--workers=6", \                  
     "--timeout=120", \
     "--access-logfile=-", \
     "--error-logfile=-", \

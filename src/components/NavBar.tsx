@@ -1,51 +1,18 @@
 "use client";
-import { useEffect } from "react";
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { redirect, usePathname, useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
-//import { signOut } from "@/utils/actions";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [session, setSession] = useState<any>(null);
-  const supabase = createClient();
   const pathname = usePathname();
-
-  const router = useRouter();
-
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut(); //call client side? wala na exposed na ssr cookies naten
-    setSession(null);
-
-    router.refresh();
-    redirect("/");
-  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
-  useEffect(() => {
-    const getSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
-      console.log("Session:", session);
-    };
-
-    getSession();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const linkClass = (href: string) =>
     pathname === href
@@ -106,23 +73,15 @@ const NavBar = () => {
                 About
               </Link>
             </li>
-            {session ? (
-              <li>
-                <Button
-                  onClick={handleSignOut}
-                  variant="link"
-                  className={`block py-2 px-3 md:p-0 text-gray-900 h-auto font-medium`}
-                >
-                  Sign Out
-                </Button>
-              </li>
-            ) : (
-              <li>
-                <Link href="/register" className={linkClass("/register")}>
-                  Register
-                </Link>
-              </li>
-            )}
+            <li>
+              <Link 
+                href="/chatbot" 
+                className={linkClass("/chatbot")}
+                onClick={() => setIsOpen(false)}
+              >
+                Chatbot
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

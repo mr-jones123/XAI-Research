@@ -7,31 +7,9 @@ import HowItWorks from "./HowItWorks";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import ExplainabilitySection from "./ExplainabilitySection";
 import TeamSection from "./TeamSection";
-import { useToast } from "@/hooks/use-toast"
-import { useSearchParams } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 
 const Intro = () => {
   const words = ["Transparency", "Interpretability", "Explainability"];
-  const { toast } = useToast();
-  const router = useRouter();
-  const supabase = createClient();
-
-  const handleGetStarted = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to access the chatbot",
-        variant: "destructive",
-      });
-    } else {
-      router.push("/chatbot");
-    }
-  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
       <main className="container mx-auto px-4 py-8 md:py-16 lg:py-24">
@@ -53,7 +31,7 @@ const Intro = () => {
           </p>
           <div className="flex justify-center space-x-11">
             <Link href="/chatbot">
-              <Button className="bg-blue-500 hover:bg-blue-600 mt-4 md:mt-5 text-sm md:text-base px-4 py-2 md:px-6 md:py-2.5" onClick={handleGetStarted}>
+              <Button className="bg-blue-500 hover:bg-blue-600 mt-4 md:mt-5 text-sm md:text-base px-4 py-2 md:px-6 md:py-2.5">
                 Get Started
               </Button>
             </Link>
