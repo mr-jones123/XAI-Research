@@ -182,13 +182,6 @@ export default function ExplanationPanel({
             >
               LIME Details
             </TabsTrigger>
-            <TabsTrigger
-              value="quality"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:shadow-none rounded-none h-12"
-              disabled={isUncertainResponse || aiDetails.localFidelity === undefined || aiDetails.localFidelity === null}
-            >
-              Fidelity
-            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -311,44 +304,12 @@ export default function ExplanationPanel({
               )}
 
               <div className="mt-6 bg-blue-50 p-4 rounded-md">
-                <h4 className="font-medium text-blue-800 mb-2">Understanding LIME Output</h4>
+                <h4 className="font-medium text-blue-800 mb-2">Try inputting again but remove the top words!</h4>
                 <p className="text-sm text-blue-700">
-                  The chart above shows which words or phrases influenced the AI's decision, based on a locally trained explanation model.
-                  Longer bars indicate stronger influence: blue bars (positive weights) increased the AI's confidence in the predicted class, while red bars (negative weights) decreased it — meaning the model would have been more confident without those words.
+                  These words most influenced the AI's decision. Blue bars pushed toward the current verdict, red bars pushed against it. <strong>Removing these words will change the output.</strong> Go check it out!
                 </p>
               </div>
-            </div>
-          </TabsContent>
 
-          <TabsContent value="quality" className="m-0 p-4">
-            <div>
-              <div className="flex items-center mb-3">
-                <h3 className="text-sm font-medium text-gray-500">EXPLANATION QUALITY</h3>
-                <TooltipProvider>
-                  <RechartsTooltip>
-                    <TooltipTrigger asChild>
-                      <BadgeInfo className="text-gray-500 h-4 w-4 ml-2 cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Local fidelity measures how well the LIME explanation approximates the model's behavior around this specific prediction (higher is better)</p>
-                    </TooltipContent>
-                  </RechartsTooltip>
-                </TooltipProvider>
-              </div>
-              
-              <div className="flex items-center mb-4">
-                <Badge variant="outline" className="bg-blue-50 text-blue-800 border-blue-200">
-                  {(localFidelity * 100).toFixed(1)}%
-                </Badge>
-              </div>
-              
-              <div className="bg-blue-50 p-4 rounded-md">
-                <h4 className="font-medium text-blue-800 mb-2">What This Means</h4>
-                <p className="text-sm text-blue-700">
-                  This score indicates how accurately the LIME explanation represents the AI model's actual decision-making process for this specific input. 
-                  A higher percentage means the explanation is more reliable and trustworthy.
-                </p>
-              </div>
             </div>
           </TabsContent>
         </CardContent>

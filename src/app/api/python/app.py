@@ -25,6 +25,21 @@ in_distribution_mean = None
 in_distribution_inv_covariance = None
 MAHALANOBIS_THRESHOLD = 26.0 # Placeholder threshold
 
+label_info = {
+    0: {
+        'verdict': 'Verified',
+        'explanation': 'The input likely came from a reliable source. The writing style may have contributed to the output. Check it out!'
+    },
+    1: {
+        'verdict': 'Fake',
+        'explanation': 'The input is likely taken out-of-context, misinformation, or disinformation. The writing style may have also contributed to the output.'
+    },
+    2: {
+        'verdict': 'Unverified',
+        'explanation': 'The input is likely unrelated to any news or an updated news.'
+    }
+}
+
 def load_model_and_ood_stats():
     global tokenizer, model, explainer, in_distribution_mean, in_distribution_inv_covariance
     if not os.path.exists(model_path):
@@ -130,7 +145,7 @@ def LIME_Algorithm(input_text):
         input_text,
         prediction_function_for_lime, # Changed here
         num_features=5,
-        num_samples=1000
+        num_samples=600
     )
     features = [{'feature': f, 'weight': w} for f, w in exp.as_list()]
     fidelity = getattr(exp, 'score', None)
@@ -159,32 +174,36 @@ def POST_Method():
             print(f"Input: '{input_text[:50]}...', Mahalanobis Distance: {mahalanobis_dist:.2f}")
 
             if mahalanobis_dist > MAHALANOBIS_THRESHOLD:
-                print(f"OOD detected (Distance: {mahalanobis_dist:.2f} > Threshold: {MAHALANOBIS_THRESHOLD}). Responding 'I don't know'.")
-                return jsonify({'AIResponse': "I don't know", 'LIMEOutput': [], 'rawPredictions': probs.tolist(), 'ood_score': mahalanobis_dist}), 200
+                print(f"OOD detected (Distance: {mahalanobis_dist:.2f} > Threshold: {MAHALANOBIS_THRESHOLD}). Responding 'Unverified'.")
+                # Create combined response for OOD detection
+                combined_response = f"{label_info[2]['verdict']}. {label_info[2]['explanation']}"
+                return jsonify({
+                    'AIResponse': combined_response, 
+                    'LIMEOutput': [], 
+                    'rawPredictions': probs.tolist(), 
+                    'ood_score': mahalanobis_dist
+                }), 200
         else:
             print("OOD stats not available, skipping Mahalanobis check.")
 
+        # If not OOD, proceed with original logic
+        if pred_label == 2 or probs.max() < 0.7:
+            # Low confidence or direct "Unverified" prediction
+            combined_response = f"{label_info[2]['verdict']}. {label_info[2]['explanation']}"
+            return jsonify({
+                'AIResponse': combined_response, 
+                'LIMEOutput': [], 
+                'rawPredictions': probs.tolist()
+            }), 200
 
-        # If not OOD, proceed with original logic (softmax thresholding and LIME)
-        # The problem statement implies BERT has high *confidence* (softmax) on OOD,
-        # so Mahalanobis should ideally catch it first.
-        # We can keep the softmax threshold as a secondary check or remove it if Mahalanobis is deemed sufficient.
-        # For now, let's keep it.
-        if pred_label == 2 or probs.max() < 0.7: # Class 2 is "I don't know"
-            # Check if this was already an "I don't know" from the model's direct output
-            # or low confidence even if not OOD by Mahalanobis.
-            ai_label = "I don't know"
-            # If it's "I don't know" from the model, LIME might not be meaningful or could error.
-            # So, return empty LIME for this case too.
-            return jsonify({'AIResponse': ai_label, 'LIMEOutput': [], 'rawPredictions': probs.tolist()}), 200
-
-        # Otherwise run LIME
+        # Otherwise run LIME for confident predictions
         lime_feats, fidelity = LIME_Algorithm(input_text)
-        label_map = {0: 'Verified', 1: 'Fake'} # Assuming 0 and 1 are the primary labels
-        ai_label = label_map.get(pred_label, "I don't know") # Default to "I don't know" if pred_label is unexpected
+        
+        # Create combined response based on prediction
+        combined_response = f"{label_info[pred_label]['verdict']}. {label_info[pred_label]['explanation']}"
 
         response = {
-            'AIResponse': ai_label,
+            'AIResponse': combined_response,
             'LIMEOutput': lime_feats,
             'localFidelity': fidelity,
             'rawPredictions': probs.tolist(),
@@ -194,7 +213,6 @@ def POST_Method():
 
     except Exception as e:
         print(f"Error processing request: {e}")
-        # Print stack trace for more details
         import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500

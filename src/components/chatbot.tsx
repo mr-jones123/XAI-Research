@@ -17,8 +17,8 @@ interface ResponseType {
     AIResponse: string
     LIMEOutput: Array<LimeDataPoint>
     localFidelity?: number | null
-    rawPredictions?: number[],
-    ood_detection? : number | null 
+    rawPredictions?: number[]
+    ood_score?: number | null  // Changed from ood_detection to ood_score to match backend
   } | null
 }
 
@@ -60,6 +60,7 @@ export default function Chatbot({ chatId }: ChatbotProps) {
           LIMEOutput: data.LIMEOutput || [],
           localFidelity: data.localFidelity || null,
           rawPredictions: data.rawPredictions || [],
+          ood_score: data.ood_score || null, // Add OOD score handling
         },
       }
 
@@ -71,7 +72,8 @@ export default function Chatbot({ chatId }: ChatbotProps) {
         console.log("No LIME output available in response")
       }
 
-      return `AI Response: ${data.AIResponse || "No response provided"}`
+      // Return just the AI response for the chat display
+      return data.AIResponse || "No response provided"
     } catch (error) {
       console.error("Error fetching data:", error)
       return "Sorry, something went wrong. Please try again later."

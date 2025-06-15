@@ -1,0 +1,15 @@
+# Use the existing image that contains your model
+FROM gcr.io/midyear-byway-456309-d4/flask-backend-v2:latest
+
+# Overwrite only your Python code
+COPY src/app/api/python/ /app/
+
+# Reuse the original CMD (same as in your old Dockerfile)
+CMD ["gunicorn", \
+    "--bind", "0.0.0.0:8080", \
+    "--workers=6", \
+    "--timeout=120", \
+    "--access-logfile=-", \
+    "--error-logfile=-", \
+    "--preload", \
+    "app:app"]

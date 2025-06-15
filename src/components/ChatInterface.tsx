@@ -279,6 +279,7 @@ export default function ChatInterface({
         <div className={`mx-auto transition-all duration-300 ${hasAiMessages ? "max-w-2xl" : "max-w-3xl"}`}>
           {inputComponent}
         </div>
+        <p className="text-gray-600 text-center text-xs mt-5">Xee AI does make mistakes when identifying fake news. Please do some cross-referencing.</p>
       </div>
     </div>
   )
