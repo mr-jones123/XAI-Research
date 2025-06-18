@@ -39,7 +39,7 @@ const ProfileDialog = ({
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div>
-                <h4 className="font-semibold text-lg text-primary">{role}</h4>
+                <h4 className="font-semibold text-lg font-geist text-gray-500">{role}</h4>
                 <div className="flex gap-2 mt-2">
                   <a
                     href={linkedinURL}

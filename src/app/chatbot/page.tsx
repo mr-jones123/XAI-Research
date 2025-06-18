@@ -1,8 +1,14 @@
-// app/chatbot/page.tsx
-import { redirect } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
+"use client";
 
-export default function ChatbotRedirectPage() {
-  const newChatId = uuidv4();
-  redirect(`/chatbot/${newChatId}`);
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Chatbot from "@/components/chatbot";
+
+export default function ChatPage() {
+
+  return (
+    <div className="w-full px-4 sm:px-12">
+      <Chatbot/>
+    </div>
+  );
 }

@@ -22,7 +22,7 @@ interface ResponseType {
   } | null
 }
 
-export default function Chatbot({ chatId }: ChatbotProps) {
+export default function Chatbot() {
   const [response, setResponse] = useState<ResponseType | null>(null)
   const [loading, setLoading] = useState(false)
   const [webSearchLoading, setWebSearchLoading] = useState(false)

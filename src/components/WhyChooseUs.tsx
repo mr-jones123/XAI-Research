@@ -1,4 +1,4 @@
-import { CheckCircle, Brain, MessageSquareText, Sliders, Globe } from "lucide-react"
+import { Book, Code, Brain, MessageSquareText, Sliders, Globe } from "lucide-react"
 
 const features = [
   {
@@ -56,10 +56,15 @@ const WhyChooseUs = () => {
           ))}
         </div>
 
-        <div className="mt-16 text-center">
+        <div className="mt-16 text-center space-x-4">
           <div className="inline-flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full text-blue-700">
-            <CheckCircle className="h-5 w-5" />
-            <span className="font-medium">Designed to inspire trust in the next generation of AI systems.</span>
+            <Code className="h-5 w-5" />
+            <span className="font-medium">Access our code</span>
+          </div>
+
+          <div className="inline-flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full text-blue-700">
+            <Book className="h-5 w-5" />
+            <span className="font-medium">Our research</span>
           </div>
         </div>
       </div>
