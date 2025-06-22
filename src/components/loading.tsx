@@ -61,11 +61,11 @@ export default function Loading() {
     const tl = gsap.timeline({ repeat: -1 })
     timelineRef.current = tl
 
-    // Step 1: Perturbing Text
+    // perturb text
     tl.call(() => setCurrentStep(0))
       .to(progressRef.current, { width: "25%", duration: 0.5 })
       .call(() => {
-        // Animate word masking
+        // word masking
         wordsRef.current.forEach((word, index) => {
           gsap.to(word, {
             opacity: Math.random() > 0.3 ? 1 : 0.3,
@@ -79,16 +79,14 @@ export default function Loading() {
       })
       .to({}, { duration: 3 })
 
-    // Step 2: Getting Predictions
+    // predict
     tl.call(() => setCurrentStep(1))
       .to(progressRef.current, { width: "50%", duration: 0.5 })
       .call(() => {
-        // Reset word styles and show prediction animation
         wordsRef.current.forEach((word) => {
           gsap.set(word, { opacity: 1, backgroundColor: "transparent" })
         })
 
-        // Simulate prediction waves
         for (let i = 0; i < 3; i++) {
           gsap.to(textRef.current, {
             boxShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
@@ -101,12 +99,11 @@ export default function Loading() {
       })
       .to({}, { duration: 2.5 })
 
-    // Step 3: Calculating Weights
+    // calculate weights
     tl.call(() => setCurrentStep(2))
       .to(progressRef.current, { width: "75%", duration: 0.5 })
       .call(() => {
-        // Show importance weights
-        const importantWords = [0, 3, 4, 7, 9, 12] // indices of important words
+        const importantWords = [0, 3, 4, 7, 9, 12] 
         wordsRef.current.forEach((word, index) => {
           if (importantWords.includes(index)) {
             gsap.to(word, {
@@ -127,11 +124,10 @@ export default function Loading() {
       })
       .to({}, { duration: 2 })
 
-    // Step 4: Generating Explanation
+    // generate explanations
     tl.call(() => setCurrentStep(3))
       .to(progressRef.current, { width: "100%", duration: 0.5 })
       .call(() => {
-        // Final highlight animation
         gsap.to(textRef.current, {
           borderColor: "#10b981",
           borderWidth: "2px",
@@ -140,7 +136,6 @@ export default function Loading() {
       })
       .to({}, { duration: 1.5 })
 
-    // Reset for next iteration
     tl.call(() => {
       setCurrentStep(0)
       gsap.set(progressRef.current, { width: "0%" })
@@ -168,16 +163,14 @@ export default function Loading() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-transparent p-8">
       <div className="max-w-4xl w-full space-y-8">
-        {/* Header */}
         <div className="text-center space-y-4 bg-white rounded-lg p-6 shadow-lg">
           <div className="flex items-center justify-center space-x-2">
             <Brain className="w-8 h-8 text-blue-600" />
             <h1 className="text-3xl font-bold text-gray-900">LIME Analysis</h1>
           </div>
-          <p className="text-gray-600 text-lg">Local Interpretable Model-agnostic Explanations</p>
+          <p className="text-gray-600 text-lg font-geist">Local Interpretable Model-agnostic Explanations. See how it works!</p>
         </div>
 
-        {/* Sample Text */}
         <div className="bg-white rounded-lg p-6 shadow-lg">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Analyzing Text:</h3>
           <div ref={textRef} className="text-lg leading-relaxed border border-gray-200 rounded-lg p-4 bg-gray-50">
@@ -187,7 +180,7 @@ export default function Loading() {
                 ref={(el) => {
                   if (el) wordsRef.current[index] = el
                 }}
-                className="inline-block mr-2 px-1 rounded transition-all duration-300"
+                className="inline-block mr-2 px-1 rounded transition-all duration-300 font-geist"
               >
                 {word}
               </span>
