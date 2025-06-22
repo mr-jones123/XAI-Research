@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { Linkedin, Github } from "lucide-react";
 
 interface ProfileProps {
   name: string;
@@ -8,6 +9,7 @@ interface ProfileProps {
   image: string;
   linkedinUrl: string;
   githubUrl: string;
+  description?: string;
   color?: "blue" | "lightBlue" | "skyBlue" | "teal";
   onClick?: () => void;
 }
@@ -20,6 +22,7 @@ export const ProfileCard = ({
   githubUrl,
   color = "blue",
   onClick,
+  description
 }: ProfileProps) => {
   const colorVariants = {
     blue: "bg-blue-100",
@@ -34,6 +37,9 @@ export const ProfileCard = ({
       >
         <h3 className="font-bold text-lg sm:text-xl text-gray-800">{name}</h3>
         <p className="text-sm text-gray-600">{role}</p>
+        {description && (
+          <p className="text-xs text-gray-500 mt-2 line-clamp-2">{description}</p>
+        )}
       </div>
 
       <div className="relative h-48 sm:h-64 rounded-b-full overflow-hidden bg-gray-800">
@@ -54,7 +60,9 @@ export const ProfileCard = ({
               rel="noopener noreferrer"
               className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full transition-colors"
               onClick={(e) => e.stopPropagation()}
-            ></Link>
+            >
+              <Linkedin size={20} />
+            </Link>
           )}
 
           {githubUrl && githubUrl !== "" && (
@@ -64,7 +72,9 @@ export const ProfileCard = ({
               rel="noopener noreferrer"
               className="bg-gray-800 hover:bg-gray-900 text-white p-2 rounded-full transition-colors"
               onClick={(e) => e.stopPropagation()}
-            ></Link>
+            >
+              <Github size={20} />
+            </Link>
           )}
         </div>
       </div>

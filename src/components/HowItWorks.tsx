@@ -38,7 +38,8 @@ const HowItWorks = () => {
               </div>
             </div>
             <div className="bg-blue-500 text-white rounded-xl p-4 ml-auto mr-4 max-w-[80%]">
-            <p className="text-sm">Si Tatay ay merong jetski at pupunta sya sa WPS!</p>
+              <p className="text-sm">Summarize this text: The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder.
+                The best performing models also connect the encoder and decoder through an attention mechanism.</p>
             </div>
             <div className="mt-4 flex items-center gap-2 bg-white rounded-full p-2 pr-3 border border-gray-200">
               <div className="bg-blue-100 p-2 rounded-full">
@@ -76,7 +77,8 @@ const HowItWorks = () => {
               </div>
             </div>
             <div className="bg-blue-500 text-white rounded-xl p-4 mr-auto ml-4 max-w-[80%] mb-4">
-              <p className="text-sm">Si Tatay ay merong jetski at pupunta sya sa WPS!</p>
+              <p className="text-sm">Summarize this text: The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder.
+                The best performing models also connect the encoder and decoder through an attention mechanism.</p>
             </div>
             <div className="bg-white rounded-xl shadow-sm p-4">
               <div className="flex items-center gap-2 mb-3">
@@ -88,7 +90,6 @@ const HowItWorks = () => {
                 <div className="bg-gray-100 h-3 rounded-full w-[90%]" />
                 <div className="bg-gray-100 h-3 rounded-full w-[80%]" />
                 <div className="bg-gray-100 h-3 rounded-full w-[95%]" />
-                <div className="bg-gray-100 h-3 rounded-full w-[60%]" />
               </div>
               <div className="mt-3 flex justify-end">
                 <div className="bg-blue-100 text-blue-500 text-xs px-2 py-1 rounded-md">
@@ -98,8 +99,8 @@ const HowItWorks = () => {
             </div>
           </div>
           <h3 className="text-2xl font-bold mb-2">AI Response</h3>
-          <p className="text-gray-500 text-cente font-geist">
-              The AI will respond to your query and it will say whether your input is <span className="font-bold">fake or verified.</span>
+          <p className="text-gray-500 text-center font-geist">
+            The AI will responds to your input whilst providing an explanation of its decision.
           </p>
         </article>
 
@@ -127,6 +128,25 @@ const HowItWorks = () => {
                   <div className="w-3 h-14 bg-blue-600 rounded-t-sm" />
                   <div className="w-3 h-8 bg-blue-400 rounded-t-sm" />
                 </div>
+                <div className="bg-blue-100 rounded-lg p-2 flex items-end justify-around">
+                  <div className="w-3 h-10 bg-blue-400 rounded-t-sm" />
+                  <div className="w-3 h-6 bg-blue-500 rounded-t-sm" />
+                  <div className="w-3 h-14 bg-blue-600 rounded-t-sm" />
+                  <div className="w-3 h-8 bg-blue-400 rounded-t-sm" />
+                </div>
+                <div className="bg-blue-100 rounded-lg p-2">
+                  <div className="h-2 w-[70%] bg-blue-500 rounded-full mb-1" />
+                  <div className="h-2 w-[40%] bg-blue-400 rounded-full mb-1" />
+                  <div className="h-2 w-[90%] bg-blue-600 rounded-full" />
+                </div>
+
+                <div className="bg-blue-100 rounded-lg p-2 flex items-end justify-around">
+                  <div className="w-3 h-10 bg-blue-400 rounded-t-sm" />
+                  <div className="w-3 h-6 bg-blue-500 rounded-t-sm" />
+                  <div className="w-3 h-14 bg-blue-600 rounded-t-sm" />
+                  <div className="w-3 h-8 bg-blue-400 rounded-t-sm" />
+                </div>
+
               </div>
               <div className="bg-blue-100 rounded-lg p-2 flex items-center justify-center">
                 <div className="w-20 h-20 rounded-full border-4 border-blue-200 flex items-center justify-center">
