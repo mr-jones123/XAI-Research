@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 import requests
 from c_lime import CLIMEWithLIME
+from concurrent.futures import ThreadPoolExecutor
 
 load_dotenv()
 
@@ -16,7 +17,7 @@ client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 clime = CLIMEWithLIME()
 
 @app.route("/general", methods=["POST"])
-def hello():
+def hello():    
     data = request.get_json()
     prompt = data.get("prompt", "")
 
@@ -29,15 +30,21 @@ def hello():
 
     # Define predict_fn for Gemini
     def predict_fn(texts):
-        outputs = []
-        for txt in texts:
-            res = client.models.generate_content(model="gemini-2.5-flash", contents=txt)
-            outputs.append(res.text)
-        return outputs
+        with ThreadPoolExecutor() as executor:
+            # Use a list comprehension to submit all tasks to the executor
+            # and then get the results.
+            results = list(executor.map(
+                lambda txt: client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=txt
+                ).text,
+                texts
+            ))
+        return results
 
     # Run C-LIME
     explanation = clime.explain(prompt, original_output, predict_fn)
-
+    
     return jsonify({
         "ai_response": original_output,
         "explanation": {
@@ -62,16 +69,20 @@ def ai_summarize():
 
     # Define predict_fn for Cloud Run model
     def predict_fn(texts):
-        results = []
-        for txt in texts:
+        def fetch_summary(txt):
             resp = requests.post(
                 os.environ["MODEL_INFERENCE_ENDPOINT"],
                 json={"prompt": txt},
                 headers={"Content-Type": "application/json"},
             )
             resp.raise_for_status()
-            results.append(resp.json().get("ai_response", ""))
+            return resp.json().get("ai_response", "")
+
+        with ThreadPoolExecutor() as executor:
+            results = list(executor.map(fetch_summary, texts))
         return results
+
+
 
     # Run C-LIME
     explanation = clime.explain(prompt, original_output, predict_fn)
@@ -85,4 +96,4 @@ def ai_summarize():
     })
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=8080)
