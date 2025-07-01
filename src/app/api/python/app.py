@@ -92,7 +92,6 @@ def ai_summarize():
             inference_endpoint,
             json={"prompt": prompt},
             headers={"Content-Type": "application/json"},
-            timeout=30  # Add timeout
         )
         model_response.raise_for_status()
         original_output = model_response.json().get("ai_response", "")
@@ -104,7 +103,6 @@ def ai_summarize():
                     inference_endpoint,
                     json={"prompt": txt},
                     headers={"Content-Type": "application/json"},
-                    timeout=30
                 )
                 resp.raise_for_status()
                 return resp.json().get("ai_response", "")
