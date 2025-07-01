@@ -12,5 +12,3 @@ COPY . .
 EXPOSE 8080
 
 CMD ["gunicorn", "-k", "gevent", "-w", "2", "--timeout", "300", "app:app", "--bind", "0.0.0.0:8080"]
-
-
