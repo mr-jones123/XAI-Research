@@ -20,7 +20,7 @@ export default function Chatbot() {
   const [explanation, setExplanation] = useState<ExplanationData | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
 
-  const flaskBackend = "http://127.0.0.1:8080";
+  const flaskBackend = process.env.NEXT_PUBLIC_FLASK_BACKEND as string;
 
   const handleSubmit = async (input: string): Promise<string> => {
     setLoading(true)
