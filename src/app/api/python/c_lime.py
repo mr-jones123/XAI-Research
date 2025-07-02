@@ -31,7 +31,7 @@ class CLIMEWithLIME:
             # Return a default similarity score if encoding fails
             return 0.5
 
-    def explain(self, input_text: str, original_output: str, predict_fn, num_samples: int = 10) -> dict:
+    def explain(self, input_text: str, original_output: str, predict_fn, num_samples: int = 25) -> dict:
         try:
             if len(input_text.split()) <= 20:
                 explainer = LimeTextExplainer(split_expression='\\s+', bow=False)  # word-level
