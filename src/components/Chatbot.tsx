@@ -20,7 +20,7 @@ export default function Chatbot() {
   const [explanation, setExplanation] = useState<ExplanationData | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
 
-  const flaskBackend = process.env.NEXT_PUBLIC_FLASK_BACKEND as string;
+  const flaskBackend = "http://127.0.0.1:8080/general";
 
   const handleSubmit = async (input: string): Promise<string> => {
     setLoading(true)
@@ -29,8 +29,7 @@ export default function Chatbot() {
     setShowExplanation(false)
 
     try {
-      const endpoint = mode === "general" ? "/general" : "/summarize"
-      const res = await fetch(`${flaskBackend}${endpoint}`, {
+      const res = await fetch(`${flaskBackend}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,37 +90,6 @@ export default function Chatbot() {
             <h1 className="text-xl font-bold text-gray-900">XeeAI</h1>
             <span className="text-sm text-gray-500">with LIME Explanations</span>
           </div>
-
-          {/* Mode Toggle */}
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-600 mr-3">Mode:</span>
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              <Button
-                variant={mode === "general" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setMode("general")}
-                className={`flex items-center space-x-2 ${
-                  mode === "general" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 hover:text-gray-900"
-                }`}
-                disabled={loading}
-              >
-                <MessageSquare className="w-4 h-4" />
-                <span>General</span>
-              </Button>
-              <Button
-                variant={mode === "summary" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setMode("summary")}
-                className={`flex items-center space-x-2 ${
-                  mode === "summary" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 hover:text-gray-900"
-                }`}
-                disabled={loading}
-              >
-                <FileText className="w-4 h-4" />
-                <span>Summary</span>
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -135,7 +103,7 @@ export default function Chatbot() {
         {/* Explanation Panel */}
         {showExplanation && (
           <div className="w-96 transition-all duration-300">
-            <ExplanationPanel explanation={explanation} mode={mode} query={currentQuery} />
+            <ExplanationPanel explanation={explanation} mode={mode} />
           </div>
         )}
       </div>

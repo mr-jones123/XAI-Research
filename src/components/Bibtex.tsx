@@ -8,7 +8,7 @@ import { useState } from "react"
 export default function BibTEX() {
   const [copied, setCopied] = useState(false)
 
-  const bibtex = `@mastersthesis{Abong2025LIME,
+  const bibtex = `@thesis{Abong2025LIME,
   title={Assessing the Impact of LIME Algorithm on User Trust in an AI System through Explainable AI Visualizations},
   author={Abong, John Aiverson P. and Justiano, Janna Andrea G. and Lacap, Xynil Jhed and Mercado, Raphael Andre C.},
   school={FEU Institute of Technology},

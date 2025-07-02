@@ -12,7 +12,7 @@ import {
 } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Brain, BarChart3, Info } from "lucide-react"
-import BibTEX  from "./bibtex-citation"
+import BibTEX  from "./Bibtex"
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden" // Add this import
 
@@ -24,10 +24,9 @@ interface ExplanationData {
 interface ExplanationPanelProps {
   explanation: ExplanationData | null
   mode: "general" | "summary"
-  query: string
 }
 
-export default function ExplanationPanel({ explanation, mode, query }: ExplanationPanelProps) {
+export default function ExplanationPanel({ explanation, mode }: ExplanationPanelProps) {
 
 
   const chartData =
@@ -102,32 +101,7 @@ export default function ExplanationPanel({ explanation, mode, query }: Explanati
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-4 space-y-4">
-        {/* Query */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center space-x-2">
-              <Info className="w-4 h-4" />
-              <span className="text-xl">Your Input</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg font-geist">{query}</p>
-          </CardContent>
-        </Card>
-
-        {/* AI Output */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center space-x-2">
-              <Brain className="w-4 h-4" />
-              <span className="text-xl">AI Response</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-700 bg-blue-50 p-3 rounded-lg font-geist">{explanation.original_output}</p>
-          </CardContent>
-        </Card>
-
+      
         {/* Chart */}
         <Card>
           <CardHeader className="pb-2">

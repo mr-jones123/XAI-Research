@@ -2,9 +2,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS 
 from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 import os
-import requests
 from c_lime import CLIMEWithLIME
 from concurrent.futures import ThreadPoolExecutor
 
@@ -13,7 +13,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Initialize client and clime with error handling
 try:
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
@@ -31,7 +30,7 @@ def health_check():
     return jsonify({"status": "healthy"}), 200
 
 @app.route("/general", methods=["POST"])
-def hello():    
+def ai_response():    
     if not client or not clime:
         return jsonify({"error": "Services not properly initialized"}), 500
     
@@ -42,9 +41,24 @@ def hello():
         return jsonify({"error": "Prompt is required"}), 400
 
     try:
+        generate_content_config = types.GenerateContentConfig(
+            system_instruction=
+            """"
+                You are a helpful,fun, conversational AI chatbot. You will answer whatever the user asks you. 
+                You have a specific way of answering questions. Please refer to <INSTRUCTIONS>.
+                
+                <INSTRUCTIONS>
+                  - Always start with a friendly greeting.
+                  - Provide clear and concise answers unless the user says it wants detailed explanation.
+                  - Try to avoid answering in a bullet point format unless the user specifies it.
+                  - Be conversational and engaging.
+                </INSTRUCTIONS>                
+            """
+        )
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=prompt,
+            config=generate_content_config,
         )
         original_output = response.text
 
@@ -59,7 +73,7 @@ def hello():
                 ))
             return results
 
-        # Run C-LIME
+
         explanation = clime.explain(prompt, original_output, predict_fn)
         
         return jsonify({
@@ -69,59 +83,6 @@ def hello():
                 "explanation": explanation["explanation"]
             }
         })
-    except Exception as e:
-        return jsonify({"error": f"Failed to process request: {str(e)}"}), 500
-
-@app.route("/summarize", methods=["POST"])
-def ai_summarize():
-    if not clime:
-        return jsonify({"error": "Services not properly initialized"}), 500
-        
-    data = request.get_json()
-    prompt = data.get("prompt", "")
-    
-    if not prompt:
-        return jsonify({"error": "Prompt is required"}), 400
-
-    inference_endpoint = os.environ.get("MODEL_INFERENCE_ENDPOINT")
-    if not inference_endpoint:
-        return jsonify({"error": "MODEL_INFERENCE_ENDPOINT not configured"}), 500
-
-    try:
-        model_response = requests.post(
-            inference_endpoint,
-            json={"prompt": prompt},
-            headers={"Content-Type": "application/json"},
-        )
-        model_response.raise_for_status()
-        original_output = model_response.json().get("ai_response", "")
-
-        # Define predict_fn for Cloud Run model
-        def predict_fn(texts):
-            def fetch_summary(txt):
-                resp = requests.post(
-                    inference_endpoint,
-                    json={"prompt": txt},
-                    headers={"Content-Type": "application/json"},
-                )
-                resp.raise_for_status()
-                return resp.json().get("ai_response", "")
-
-            with ThreadPoolExecutor() as executor:
-                results = list(executor.map(fetch_summary, texts))
-            return results
-
-        explanation = clime.explain(prompt, original_output, predict_fn)
-        print(explanation)
-        return jsonify({
-            "ai_response": original_output,
-            "explanation": {
-                "original_output": original_output,
-                "explanation": explanation["explanation"]
-            }
-        })
-    except requests.RequestException as e:
-        return jsonify({"error": f"Failed to call model endpoint: {str(e)}"}), 500
     except Exception as e:
         return jsonify({"error": f"Failed to process request: {str(e)}"}), 500
 
