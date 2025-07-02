@@ -1,45 +1,47 @@
-
-from flask import Flask, jsonify, request
-from flask_cors import CORS 
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from concurrent.futures import ThreadPoolExecutor
+from c_lime import CLIMEWithLIME
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 import os
-from c_lime import CLIMEWithLIME
-from concurrent.futures import ThreadPoolExecutor
 
 load_dotenv()
 
-app = Flask(__name__)
-CORS(app)
 
+app = FastAPI()
+origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://xai-research.vercel.app"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],            
+    allow_headers=["*"],   
+)
+# load gemini
 try:
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
+    API_KEY_GEMINI = os.environ.get("GEMINI_API_KEY")
+    if not API_KEY_GEMINI:
         raise ValueError("GEMINI_API_KEY environment variable not set")
-    client = genai.Client(api_key=api_key)
-    clime = CLIMEWithLIME()
+    gemini_client = genai.Client(api_key=API_KEY_GEMINI)
 except Exception as e:
-    print(f"Warning: Failed to initialize services: {e}")
-    client = None
-    clime = None
+    print(f"Warning: Failed to initialize Gemini client: {e}")
+    gemini_client = None
 
-@app.route("/health", methods=["GET"])
-def health_check():
-    """Health check endpoint for Cloud Run"""
-    return jsonify({"status": "healthy"}), 200
-
-@app.route("/general", methods=["POST"])
-def ai_response():    
-    if not client or not clime:
-        return jsonify({"error": "Services not properly initialized"}), 500
+        
+clime = CLIMEWithLIME()
     
-    data = request.get_json()
+@app.post("/")  
+async def gemini_response(request:Request):    
+
+    data = await request.json()
     prompt = data.get("prompt", "")
-    
-    if not prompt:
-        return jsonify({"error": "Prompt is required"}), 400
-
     try:
         generate_content_config = types.GenerateContentConfig(
             system_instruction=
@@ -55,7 +57,7 @@ def ai_response():
                 </INSTRUCTIONS>                
             """
         )
-        response = client.models.generate_content(
+        response = gemini_client.models.generate_content(
             model="gemini-2.5-flash",
             contents=prompt,
             config=generate_content_config,
@@ -65,7 +67,7 @@ def ai_response():
         def predict_fn(texts):
             with ThreadPoolExecutor() as executor:
                 results = list(executor.map(
-                    lambda txt: client.models.generate_content(
+                    lambda txt: gemini_client.models.generate_content(
                         model="gemini-2.5-flash",
                         contents=txt
                     ).text,
@@ -76,18 +78,13 @@ def ai_response():
 
         explanation = clime.explain(prompt, original_output, predict_fn)
         
-        return jsonify({
-            "ai_response": original_output,
+  
+        return {
+            "response": original_output,
             "explanation": {
                 "original_output": original_output,
                 "explanation": explanation["explanation"]
             }
-        })
+        }
     except Exception as e:
-        return jsonify({"error": f"Failed to process request: {str(e)}"}), 500
-
-if __name__ == "__main__":
-    print("Starting Flask app in development mode...")
-    print(f"GEMINI_API_KEY set: {'Yes' if os.environ.get('GEMINI_API_KEY') else 'No'}")
-    print(f"MODEL_INFERENCE_ENDPOINT set: {'Yes' if os.environ.get('MODEL_INFERENCE_ENDPOINT') else 'No'}")
-    app.run(host='0.0.0.0', port=8080, debug=False)
+        return {"error": f"Failed to process request: {str(e)}"}

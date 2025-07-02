@@ -20,7 +20,6 @@ export default function Chatbot() {
   const [explanation, setExplanation] = useState<ExplanationData | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
 
-  const flaskBackend = process.env.NEXT_PUBLIC_FLASK_BACKEND as string;
 
   const handleSubmit = async (input: string): Promise<string> => {
     setLoading(true)
@@ -29,7 +28,7 @@ export default function Chatbot() {
     setShowExplanation(false)
 
     try {
-      const res = await fetch(`${flaskBackend}`, {
+      const res = await fetch(process.env.NEXT_PUBLIC_FLASK_BACKEND as string, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,18 +41,16 @@ export default function Chatbot() {
       }
 
       const res_data = await res.json()
-
+      console.log("Received data from backend:", res_data);
       if (res_data.explanation) {
-
         const explanationData = {
-          original_output:
-            res_data.explanation.originaloutput || res_data.explanation.original_output || res_data.ai_response,
+          original_output: res_data.explanation.original_output || res_data.response,
           explanation: res_data.explanation.explanation || [],
         }
         setExplanation(explanationData)
         setShowExplanation(true)
       } else if (res_data.originaloutput && res_data.explanation) {
-        // Handle direct LIME format
+
         const explanationData = {
           original_output: res_data.originaloutput,
           explanation: res_data.explanation,
@@ -62,12 +59,10 @@ export default function Chatbot() {
         setShowExplanation(true)
       }
 
-      // Return the AI response
+  
       return (
-        res_data.explanation?.originaloutput ||
-        res_data.explanation?.original_output ||
-        res_data.originaloutput ||
-        res_data.ai_response ||
+        res_data.response ||                            
+        res_data.explanation?.original_output ||          
         "No response provided"
       )
     } catch (error) {
