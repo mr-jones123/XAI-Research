@@ -1,25 +1,19 @@
 "use client"
+
 import { useState } from "react"
 import ChatInterface from "./ChatInterface"
-import ExplanationPanel from "./ExplainablePanel"
 import "highlight.js/styles/github.css"
-import { Button } from "@/components/ui/button"
-import { MessageSquare, FileText } from "lucide-react"
 
 interface ExplanationData {
   original_output: string
   explanation: Array<[string, number]>
 }
 
-type Mode = "general" | "summary"
-
 export default function Chatbot() {
   const [loading, setLoading] = useState(false)
   const [currentQuery, setCurrentQuery] = useState<string>("")
-  const [mode, setMode] = useState<Mode>("general")
   const [explanation, setExplanation] = useState<ExplanationData | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
-
 
   const handleSubmit = async (input: string): Promise<string> => {
     setLoading(true)
@@ -41,7 +35,8 @@ export default function Chatbot() {
       }
 
       const res_data = await res.json()
-      console.log("Received data from backend:", res_data);
+      console.log("Received data from backend:", res_data)
+
       if (res_data.explanation) {
         const explanationData = {
           original_output: res_data.explanation.original_output || res_data.response,
@@ -50,7 +45,6 @@ export default function Chatbot() {
         setExplanation(explanationData)
         setShowExplanation(true)
       } else if (res_data.originaloutput && res_data.explanation) {
-
         const explanationData = {
           original_output: res_data.originaloutput,
           explanation: res_data.explanation,
@@ -59,12 +53,7 @@ export default function Chatbot() {
         setShowExplanation(true)
       }
 
-  
-      return (
-        res_data.response ||                            
-        res_data.explanation?.original_output ||          
-        "No response provided"
-      )
+      return res_data.response || res_data.explanation?.original_output || "No response provided"
     } catch (error) {
       console.error("Error fetching data:", error)
       if (error instanceof TypeError && error.message.includes("fetch")) {
@@ -92,15 +81,8 @@ export default function Chatbot() {
       <div className="flex-1 flex overflow-auto">
         {/* Chat Interface */}
         <div className={`${showExplanation ? "flex-1" : "w-full"} transition-all duration-300`}>
-          <ChatInterface onSubmit={handleSubmit} loading={loading} mode={mode} />
+          <ChatInterface onSubmit={handleSubmit} loading={loading} />
         </div>
-
-        {/* Explanation Panel */}
-        {showExplanation && (
-          <div className="w-96 transition-all duration-300">
-            <ExplanationPanel explanation={explanation} mode={mode} />
-          </div>
-        )}
       </div>
     </div>
   )
