@@ -1,4 +1,5 @@
 "use client"
+
 import { useState } from "react"
 import ChatInterface from "./ChatInterface"
 import "highlight.js/styles/github.css"
