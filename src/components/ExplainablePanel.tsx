@@ -24,10 +24,10 @@ interface ExplanationData {
 interface ExplanationPanelProps {
   explanation: ExplanationData | null
   mode: "general" | "summary"
+  isMobile?: boolean
 }
 
-export default function ExplanationPanel({ explanation, mode }: ExplanationPanelProps) {
-
+export default function ExplanationPanel({ explanation, mode, isMobile = false }: ExplanationPanelProps) {
 
   const chartData =
     explanation?.explanation?.map(([feature, importance], index) => {
@@ -101,7 +101,7 @@ export default function ExplanationPanel({ explanation, mode }: ExplanationPanel
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-4 space-y-4">
-      
+
         {/* Chart */}
         <Card>
           <CardHeader className="pb-2">

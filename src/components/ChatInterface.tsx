@@ -2,12 +2,10 @@
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import type React from "react"
-
 import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
-import { Send } from "lucide-react"
+import { Send, Loader2 } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
-import Loading from "./loading"
 
 interface Message {
   sender: "user" | "ai" | "web-search"
@@ -20,10 +18,9 @@ interface ChatInterfaceProps {
   loading: boolean
   webSearchLoading?: boolean
   onWebSearchMessage?: (message: string) => void
-  mode: "general" | "summary"
 }
 
-export default function ChatInterface({ onSubmit, loading, mode }: ChatInterfaceProps) {
+export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps) {
   const [input, setInput] = useState<string>("")
   const [messages, setMessages] = useState<Message[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -56,11 +53,9 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
       }
     })
-
     if (messagesContainerRef.current) {
       observer.observe(messagesContainerRef.current)
     }
-
     return () => {
       observer.disconnect()
     }
@@ -70,10 +65,8 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
     if (!input.trim()) {
       return
     }
-
     const userMessage: Message = { sender: "user", text: input }
     setMessages((prev) => [...prev, userMessage])
-
     setInput("")
 
     try {
@@ -134,19 +127,6 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
 
   return (
     <div className="flex flex-col h-full w-full relative">
-      {/* LIME Loading Overlay */}
-      {loading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* Blurred Background */}
-          <div className="absolute inset-0 backdrop-blur-md bg-black/20" />
-
-          {/* Loading Animation */}
-          <div className="relative z-10 w-full h-full">
-            <Loading />
-          </div>
-        </div>
-      )}
-
       {messages.length === 0 ? (
         <div
           ref={messagesContainerRef}
@@ -154,66 +134,28 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
           style={{ paddingBottom: "6rem" }}
         >
           <div className="w-full max-w-3xl mx-auto text-center">
-            <h1 className="text-3xl font-bold mb-3">See AI with XeeAI</h1>
-            <p className="text-gray-600 mb-6 font-geist font-bold">Your honest, explainable AI</p>
-
-            {/* Tutorial section */}
+            <h1 className="text-3xl font-bold mb-3">XeeAI</h1>
+            <p className="text-gray-600 mb-6 font-geist font-bold">Your AI Assistant</p>
+            {/* Welcome section */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8 text-left font-geist ">
-              <h2 className="text-xl font-semibold text-blue-800 mb-3">
-                {mode === "general" ? "General Mode - How It Works" : "Summary Mode - How It Works"}
-              </h2>
+              <h2 className="text-xl font-semibold text-blue-800 mb-3">Welcome to XeeAI</h2>
               <p className="mb-4">
-                {mode === "general"
-                  ? 'XeeAI is a general AI chatbot that is integrated with an Explainable AI (XAI) algorithm called LIME. You may use it just as any other regular chatbots, like asking "What\'s Machine Learning?" or "Explain quantum computing". Unlike other AI, XeeAI shows you how your input influenced its decisions.'
-                  : "XeeAI Summary Mode specializes in creating concise summaries of long texts, articles, or documents using advanced AI with LIME explainability. Simply paste your text and ask for a summary. XeeAI will show you which parts of your input were most important for generating the summary."}
+                XeeAI is your intelligent AI assistant ready to help with questions, explanations, and conversations on
+                a wide range of topics.
               </p>
-              <p className="mb-4">
-                {mode === "general"
-                  ? "The explanation process works through the following steps:"
-                  : "The summarization and explanation process works through the following steps:"}
-              </p>
-              <ol className="list-decimal pl-5 space-y-2 mb-4">
-                <li>It generates many variations of your input by masking or removing words and phrases.</li>
-                <li>
-                  For each variation, it generates a new {mode === "general" ? "response" : "summary"} and compares it
-                  to the original {mode === "general" ? "response" : "summary"} using semantic similarity.
-                </li>
-                <li>
-                  It analyzes which input parts caused the biggest changes — those are considered the most influential
-                  for the {mode === "general" ? "response" : "summary"}.
-                </li>
-              </ol>
-              <p className="mb-4">XeeAI will then turn those words with scores to a bar graph.</p>
-
-              {/* Mode-specific examples */}
+              {/* Examples */}
               <div className="bg-white border border-blue-100 rounded-lg p-4 mb-4">
-                <h3 className="font-semibold text-blue-800 mb-2">
-                  {mode === "general" ? "Example Questions:" : "Example Usage:"}
-                </h3>
+                <h3 className="font-semibold text-blue-800 mb-2">Example Questions:</h3>
                 <ul className="text-sm text-blue-700 space-y-1">
-                  {mode === "general" ? (
-                    <>
-                      <li>• "What is machine learning?"</li>
-                      <li>• "Explain the concept of blockchain"</li>
-                      <li>• "How does photosynthesis work?"</li>
-                    </>
-                  ) : (
-                    <>
-                      <li>• "Summarize this research paper: [paste text]"</li>
-                      <li>• "Create a summary of this news article: [paste text]"</li>
-                      <li>• "Condense this document into key points: [paste text]"</li>
-                    </>
-                  )}
+                  <li>• "What is machine learning?"</li>
+                  <li>• "Explain the concept of blockchain"</li>
+                  <li>• "How does photosynthesis work?"</li>
                 </ul>
               </div>
-
               {/* Disclaimer */}
               <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mt-4">
                 <p className="text-amber-800 font-medium">Note</p>
-                <p className="text-amber-700 text-sm">
-                  Like other chatbots, XeeAI can make mistakes on its {mode === "general" ? "responses" : "summaries"}.
-                  {mode === "summary" && " For best results, provide clear, well-structured text to summarize."}
-                </p>
+                <p className="text-amber-700 text-sm">Like other chatbots, XeeAI can make mistakes on its responses.</p>
               </div>
             </div>
           </div>
@@ -236,19 +178,28 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
               </div>
             ))}
 
+            {/* Loading message bubble */}
+            {loading && (
+              <div className="flex justify-start">
+                <div className="max-w-xs md:max-w-md p-4 rounded-lg bg-gray-200 text-gray-900">
+                  <div className="flex items-center space-x-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm">XeeAI is thinking....</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div ref={messagesEndRef} id="message-end" />
           </div>
         </div>
       )}
-
       {/* Fixed input bar at bottom */}
       <div className="sticky bottom-0 left-0 right-0 bg-white p-4 z-10">
         <div className={`mx-auto transition-all duration-300 ${hasAiMessages ? "max-w-2xl" : "max-w-3xl"}`}>
           {inputComponent}
         </div>
-        <p className="text-gray-600 text-center text-xs mt-5">
-          XeeAI does make mistakes. Double-check the info.
-        </p>
+        <p className="text-gray-600 text-center text-xs mt-5">XeeAI does make mistakes. Double-check the info.</p>
       </div>
     </div>
   )
