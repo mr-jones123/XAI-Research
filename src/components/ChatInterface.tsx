@@ -22,7 +22,6 @@ interface ChatInterfaceProps {
 }
 
 export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps) {
-export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps) {
   const [input, setInput] = useState<string>("")
   const [messages, setMessages] = useState<Message[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
