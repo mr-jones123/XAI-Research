@@ -204,7 +204,6 @@ export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps)
           {inputComponent}
         </div>
         <p className="text-gray-600 text-center text-xs mt-5">XeeAI does make mistakes. Double-check the info.</p>
-        <p className="text-gray-600 text-center text-xs mt-5">XeeAI does make mistakes. Double-check the info.</p>
       </div>
     </div>
   )
