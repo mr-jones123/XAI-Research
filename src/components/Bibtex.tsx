@@ -48,9 +48,9 @@ export default function BibTEX() {
         <div className="relative">
           <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto text-sm leading-relaxed">
             <code className="font-mono">
-              <span className="text-blue-400">@mastersthesis</span>
+              <span className="text-blue-400">@thesis</span>
               <span className="text-slate-300">{"{"}</span>
-              <span className="text-green-400">yourlastname2025clime</span>
+              <span className="text-green-400">abong2025lime</span>
               <span className="text-slate-300">,</span>
               {"\n  "}
               <span className="text-yellow-400">title</span>
@@ -76,7 +76,7 @@ export default function BibTEX() {
               <span className="text-yellow-400">school</span>
               <span className="text-slate-300">=</span>
               <span className="text-slate-300">{"{"}</span>
-              <span className="text-red-300">IEEE Institute of Technology</span>
+              <span className="text-red-300">FEU Institute of Technology</span>
               <span className="text-slate-300">{"}"}</span>
               <span className="text-slate-300">,</span>
               {"\n  "}

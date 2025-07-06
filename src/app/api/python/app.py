@@ -21,8 +21,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],            
-    allow_headers=["*"],   
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 # load gemini
 try:
@@ -34,11 +34,11 @@ except Exception as e:
     print(f"Warning: Failed to initialize Gemini client: {e}")
     gemini_client = None
 
-        
+
 clime = CLIMEWithLIME()
-    
-@app.post("/")  
-async def gemini_response(request:Request):    
+
+@app.post("/")
+async def gemini_response(request:Request):
 
     data = await request.json()
     prompt = data.get("prompt", "")
@@ -46,15 +46,15 @@ async def gemini_response(request:Request):
         generate_content_config = types.GenerateContentConfig(
             system_instruction=
             """"
-                You are a helpful,fun, conversational AI chatbot. You will answer whatever the user asks you. 
+                You are a helpful,fun, conversational AI chatbot. You will answer whatever the user asks you.
                 You have a specific way of answering questions. Please refer to <INSTRUCTIONS>.
-                
+
                 <INSTRUCTIONS>
                   - Always start with a friendly greeting.
                   - Provide clear and concise answers unless the user says it wants detailed explanation.
                   - Try to avoid answering in a bullet point format unless the user specifies it.
                   - Be conversational and engaging.
-                </INSTRUCTIONS>                
+                </INSTRUCTIONS>
             """
         )
         response = gemini_client.models.generate_content(
@@ -77,8 +77,8 @@ async def gemini_response(request:Request):
 
 
         explanation = clime.explain(prompt, original_output, predict_fn)
-        
-  
+
+
         return {
             "response": original_output,
             "explanation": {
