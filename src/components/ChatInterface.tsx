@@ -145,7 +145,6 @@ export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps)
               {/* Examples */}
               <div className="bg-white border border-blue-100 rounded-lg p-4 mb-4">
                 <h3 className="font-semibold text-blue-800 mb-2">Example Questions:</h3>
-                <h3 className="font-semibold text-blue-800 mb-2">Example Questions:</h3>
                 <ul className="text-sm text-blue-700 space-y-1">
                   <li>• "What is machine learning?"</li>
                   <li>• "Explain the concept of blockchain"</li>
@@ -158,7 +157,6 @@ export default function ChatInterface({ onSubmit, loading }: ChatInterfaceProps)
               {/* Disclaimer */}
               <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mt-4">
                 <p className="text-amber-800 font-medium">Note</p>
-                <p className="text-amber-700 text-sm">Like other chatbots, XeeAI can make mistakes on its responses.</p>
                 <p className="text-amber-700 text-sm">Like other chatbots, XeeAI can make mistakes on its responses.</p>
               </div>
             </div>
