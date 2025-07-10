@@ -27,7 +27,7 @@ export default function Chatbot() {
     setMobileExplanationOpen(false)
 
     try {
-      const res = await fetch("http://localhost:8000/", {
+      const res = await fetch(process.env.NEXT_PUBLIC_FLASK_BACKEND as string, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
