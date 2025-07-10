@@ -35,11 +35,6 @@ const Intro = () => {
                 Get Started
               </Button>
             </Link>
-            <Link href="https://acm-0353f194.mintlify.app/prompt-cookbook">
-              <Button className="bg-blue-500 hover:bg-blue-600 mt-4 md:mt-5 text-sm md:text-base px-4 py-2 md:px-6 md:py-2.5">
-                User Manual
-              </Button>
-            </Link>
           </div>
         </section>
 
