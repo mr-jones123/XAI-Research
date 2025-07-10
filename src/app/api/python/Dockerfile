@@ -25,4 +25,4 @@ COPY . .
 EXPOSE $PORT
 
 # Start FastAPI app with Gunicorn and Uvicorn workers
-CMD ["gunicorn", "app:app", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080", "--workers", "2", "--threads", "8", "--timeout", "60"]
+CMD ["gunicorn", "app:app", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080", "--workers", "1", "--threads", "4", "--timeout", "600", "--worker-class", "uvicorn.workers.UvicornWorker", "--max-requests", "100", "--max-requests-jitter", "10", "--preload"]
