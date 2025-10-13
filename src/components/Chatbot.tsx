@@ -4,12 +4,13 @@ import ChatInterface from "./ChatInterface"
 import ExplanationPanel from "./ExplainablePanel"
 import "highlight.js/styles/github.css"
 import { Button } from "@/components/ui/button"
-import { MessageSquare, FileText, Info } from "lucide-react"
+import { FileText, Info } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 interface ExplanationData {
   original_output: string
   explanation: Array<[string | number, number]>
+  intercept?: number // Optional: C-LIME intercept value
 }
 
 export default function Chatbot() {
@@ -27,12 +28,18 @@ export default function Chatbot() {
     setMobileExplanationOpen(false)
 
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_FLASK_BACKEND as string, {
+      // Call C-LIME backend
+      const res = await fetch(`${process.env.NEXT_PUBLIC_LIME_BACKEND}/explain`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({
+          input_text: input,
+          segment_type: "s", // segment by sentences
+          oversampling_factor: 10.0,
+          max_units_replace: 2,
+        }),
       })
 
       if (!res.ok) {
@@ -40,29 +47,33 @@ export default function Chatbot() {
       }
 
       const res_data = await res.json()
-      console.log("Received data from backend:", res_data)
+      console.log("Received data from C-LIME backend:", res_data)
 
-      if (res_data.explanation) {
+      // Transform C-LIME response format to match existing UI expectations
+      if (res_data.attributions) {
+        const { units, scores } = res_data.attributions
+
+        // Transform arrays into [feature, score] tuples
+        const explanation = units.map((unit: string, index: number) => [
+          unit,
+          scores[index]
+        ])
+
         const explanationData = {
-          original_output: res_data.explanation.original_output || res_data.response,
-          explanation: res_data.explanation.explanation || [],
+          original_output: res_data.response,
+          explanation: explanation,
+          intercept: res_data.intercept, // Include intercept for enhanced display
         }
-        setExplanation(explanationData)
-        setShowExplanation(true)
-      } else if (res_data.originaloutput && res_data.explanation) {
-        const explanationData = {
-          original_output: res_data.originaloutput,
-          explanation: res_data.explanation,
-        }
+
         setExplanation(explanationData)
         setShowExplanation(true)
       }
 
-      return res_data.response || res_data.explanation?.original_output || "No response provided"
+      return res_data.response || "No response provided"
     } catch (error) {
       console.error("Error fetching data:", error)
       if (error instanceof TypeError && error.message.includes("fetch")) {
-        return "Unable to connect to the AI service."
+        return "Unable to connect to the C-LIME backend. Make sure it's running on http://localhost:8000"
       }
       return `Sorry, something went wrong: ${error instanceof Error ? error.message : "Unknown error"}`
     } finally {
@@ -78,8 +89,12 @@ export default function Chatbot() {
           <div className="flex items-center justify-between">
             {/* Logo and Title */}
             <div className="flex items-center space-x-2 min-w-0 flex-1">
-              <div className="flex items-center space-x-2">
-                <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-blue-600 flex-shrink-0" />
+              <div className="flex items-center space-x-3">
+                <img
+                  src="/XeeAI Logo (Draft).svg"
+                  alt="XeeAI Logo"
+                  className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 flex-shrink-0"
+                />
                 <div className="min-w-0">
                   <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate">XeeAI</h1>
                   <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">with LIME Explanations</p>
