@@ -5,29 +5,29 @@ import type React from "react"
 import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import { Send, Bot, User } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import Loading from "./loading"
 import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-
-interface Message {
-  sender: "user" | "ai" | "web-search"
-  text: string
-  type?: "normal" | "web-search"
-  timestamp?: Date
-}
+import type { Message } from "ai/react"
 
 interface ChatInterfaceProps {
-  onSubmit: (input: string) => Promise<string>
-  loading: boolean
-  webSearchLoading?: boolean
-  onWebSearchMessage?: (message: string) => void
+  messages: Message[]
+  input: string
+  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+  isLoading: boolean
   mode: "general" | "summary"
 }
 
-export default function ChatInterface({ onSubmit, loading, mode }: ChatInterfaceProps) {
-  const [input, setInput] = useState<string>("")
-  const [messages, setMessages] = useState<Message[]>([])
+export default function ChatInterface({
+  messages,
+  input,
+  handleInputChange,
+  handleSubmit,
+  isLoading,
+  mode,
+}: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -48,51 +48,13 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
       })
     }
-  }, [messages, loading])
+  }, [messages, isLoading])
 
-  const handleSend = async () => {
-    if (!input.trim() || loading) return
+  const hasAiMessages = messages.some((message) => message.role === "assistant")
 
-    const userMessage: Message = {
-      sender: "user",
-      text: input,
-      timestamp: new Date(),
-    }
-    setMessages((prev) => [...prev, userMessage])
-    setInput("")
-
-    try {
-      const ai_Response = await onSubmit(input)
-      const ai_Message: Message = {
-        sender: "ai",
-        text: ai_Response,
-        timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, ai_Message])
-    } catch (error) {
-      const errorMessage: Message = {
-        sender: "ai",
-        text: `Sorry, something went wrong. ${error}`,
-        timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, errorMessage])
-    }
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && !loading) {
-      e.preventDefault()
-      handleSend()
-    }
-  }
-
-  const hasAiMessages = messages.some((message) => message.sender === "ai")
-
-  const getMessageBubbleStyle = (message: Message) => {
-    if (message.sender === "user") {
+  const getMessageBubbleStyle = (role: string) => {
+    if (role === "user") {
       return "bg-blue-600 text-white border-blue-600"
-    } else if (message.sender === "web-search") {
-      return "bg-green-50 text-green-900 border-green-200"
     } else {
       return "bg-gray-50 text-gray-900 border-gray-200"
     }
@@ -101,14 +63,14 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
   return (
     <div className="flex flex-col h-full w-full relative bg-white">
       {/* Loading Overlay */}
-      {loading && (
+      {/* {isLoading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 backdrop-blur-md bg-black/20" />
           <div className="relative z-10 w-full h-full">
             <Loading />
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Messages Area */}
       {messages.length === 0 ? (
@@ -201,10 +163,10 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={cn("flex gap-3 sm:gap-4", message.sender === "user" ? "justify-end" : "justify-start")}
+                className={cn("flex gap-3 sm:gap-4", message.role === "user" ? "justify-end" : "justify-start")}
               >
                 {/* AI Avatar */}
-                {message.sender === "ai" && (
+                {message.role === "assistant" && (
                   <div className="flex-shrink-0">
                     <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-blue-100 flex items-center justify-center">
                       <Bot className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
@@ -213,32 +175,19 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
                 )}
 
                 {/* Message Bubble */}
-                <Card className={cn("max-w-[85%] sm:max-w-[80%] p-3 sm:p-4 border", getMessageBubbleStyle(message))}>
+                <Card className={cn("max-w-[85%] sm:max-w-[80%] p-3 sm:p-4 border", getMessageBubbleStyle(message.role))}>
                   <div
                     className={cn(
                       "prose max-w-none text-sm sm:text-base",
-                      message.sender === "user" ? "text-white [&>*]:text-white" : "",
+                      message.role === "user" ? "text-white [&>*]:text-white" : "",
                     )}
                   >
-                    <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{message.text}</ReactMarkdown>
+                    <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{message.content}</ReactMarkdown>
                   </div>
-                  {message.timestamp && (
-                    <div
-                      className={cn(
-                        "text-xs mt-2 opacity-70",
-                        message.sender === "user" ? "text-blue-100" : "text-gray-500",
-                      )}
-                    >
-                      {message.timestamp.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
-                  )}
                 </Card>
 
                 {/* User Avatar */}
-                {message.sender === "user" && (
+                {message.role === "user" && (
                   <div className="flex-shrink-0">
                     <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-200 flex items-center justify-center">
                       <User className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
@@ -257,27 +206,26 @@ export default function ChatInterface({ onSubmit, loading, mode }: ChatInterface
         <div
           className={`mx-auto transition-all duration-300 ${hasAiMessages ? "max-w-3xl lg:max-w-4xl" : "max-w-4xl"}`}
         >
-          <div className="flex items-end gap-2 sm:gap-3">
+          <form onSubmit={handleSubmit} className="flex items-end gap-2 sm:gap-3">
             <div className="flex-1 relative">
               <Textarea
                 ref={textareaRef}
                 className="w-full p-3 sm:p-4 rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm sm:text-base overflow-auto"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={loading}
+                onChange={handleInputChange}
+                disabled={isLoading}
                 placeholder="Type your message... (Ctrl+Enter to send)"
                 rows={1}
               />
             </div>
             <Button
+              type="submit"
               className="h-11 w-11 sm:h-12 sm:w-12 rounded-lg flex-shrink-0"
-              onClick={handleSend}
-              disabled={loading || !input.trim()}
+              disabled={isLoading || !input.trim()}
             >
               <Send className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
-          </div>
+          </form>
           <p className="text-gray-600 text-center text-xs sm:text-sm mt-3 sm:mt-4">
             XeeAI does make mistakes. Double-check the info.
           </p>

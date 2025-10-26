@@ -44,3 +44,4 @@ env
 # models
 src/app/api/python/models/
 *.safetensors
+.env*.local
