@@ -63,14 +63,7 @@ export default function ChatInterface({
   return (
     <div className="flex flex-col h-full w-full relative bg-white">
       {/* Loading Overlay */}
-      {/* {isLoading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 backdrop-blur-md bg-black/20" />
-          <div className="relative z-10 w-full h-full">
-            <Loading />
-          </div>
-        </div>
-      )} */}
+     */}
 
       {/* Messages Area */}
       {messages.length === 0 ? (
