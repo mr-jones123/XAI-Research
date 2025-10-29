@@ -26,9 +26,10 @@ interface ExplanationPanelProps {
   explanation: ExplanationData | null
   mode: "general" | "summary"
   isMobile?: boolean
+  isDialog?: boolean // New prop to detect if rendered in dialog
 }
 
-export default function ExplanationPanel({ explanation, mode, isMobile = false }: ExplanationPanelProps) {
+export default function ExplanationPanel({ explanation, mode, isMobile = false, isDialog = false }: ExplanationPanelProps) {
 
   const chartData =
     explanation?.explanation?.map(([feature, importance], index) => {
@@ -76,7 +77,7 @@ export default function ExplanationPanel({ explanation, mode, isMobile = false }
 
   if (!explanation.explanation || !Array.isArray(explanation.explanation) || explanation.explanation.length === 0) {
     return (
-      <div className="w-full max-w-md bg-white border-l border-gray-200 flex flex-col h-full p-4">
+      <div className={`w-full ${isDialog ? '' : 'max-w-md border-l border-gray-200'} bg-white flex flex-col h-full p-4`}>
         <div className="text-center text-gray-500">
           <Brain className="w-8 h-8 mx-auto mb-2 opacity-50" />
           <p className="text-sm">No explanation data available</p>
@@ -86,22 +87,24 @@ export default function ExplanationPanel({ explanation, mode, isMobile = false }
   }
 
   return (
-    <div className="w-full max-w-md bg-white border-l border-gray-200 flex flex-col h-full">
-      {/* Header */}
-      <div className="p-4 border-b border-gray-200 bg-gray-50">
-        <div className="flex items-center space-x-2 mb-2">
-          <Brain className="w-5 h-5 text-blue-600" />
-          <h2 className="text-lg font-semibold text-gray-900">LIME Explanation</h2>
+    <div className={`w-full ${isDialog ? '' : 'max-w-md border-l border-gray-200'} bg-white flex flex-col ${isDialog ? '' : 'h-full'}`}>
+      {/* Header - Only show in sidebar, not in dialog */}
+      {!isDialog && (
+        <div className="p-4 border-b border-gray-200 bg-gray-50">
+          <div className="flex items-center space-x-2 mb-2">
+            <Brain className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg font-semibold text-gray-900">LIME Explanation</h2>
+          </div>
+          <p className="text-sm text-gray-600 font-geist">
+            {mode === "general"
+              ? "How your input influenced the AI's response"
+              : "Which parts of your text were most important for the summary"}
+          </p>
         </div>
-        <p className="text-sm text-gray-600 font-geist">
-          {mode === "general"
-            ? "How your input influenced the AI's response"
-            : "Which parts of your text were most important for the summary"}
-        </p>
-      </div>
+      )}
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-4 space-y-4">
+      <div className={`${isDialog ? '' : 'flex-1 overflow-auto'} ${isDialog ? 'space-y-6' : 'p-4 space-y-4'}`}>
 
         {/* Chart */}
         <Card>

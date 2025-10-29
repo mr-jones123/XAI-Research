@@ -62,9 +62,6 @@ export default function ChatInterface({
 
   return (
     <div className="flex flex-col h-full w-full relative bg-white">
-      {/* Loading Overlay */}
-     */}
-
       {/* Messages Area */}
       {messages.length === 0 ? (
         <div

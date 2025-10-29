@@ -49,3 +49,7 @@ src/app/api/python/models/
 #ai stuff
 .claude
 CLAUDE.md
+
+
+__pycache__/
+*.py[cod]

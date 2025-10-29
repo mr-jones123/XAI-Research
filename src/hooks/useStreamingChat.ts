@@ -12,11 +12,19 @@ export interface LimeExplanation {
   intercept?: number
 }
 
+export interface LimeHistoryItem {
+  id: string
+  timestamp: number
+  userMessage: string
+  assistantMessage: string
+  explanation: LimeExplanation
+}
+
 export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/chat") {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isLimeProcessing, setIsLimeProcessing] = useState(false)
-  const [limeExplanation, setLimeExplanation] = useState<LimeExplanation | null>(null)
+  const [limeHistory, setLimeHistory] = useState<LimeHistoryItem[]>([])
   const [error, setError] = useState<string | null>(null)
 
   const sendMessage = useCallback(
@@ -32,6 +40,7 @@ export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/cha
 
       setMessages((prev) => [...prev, userMessage])
       setIsLoading(true)
+      setIsLimeProcessing(false)
       setError(null)
 
       // Create assistant message placeholder
@@ -43,6 +52,10 @@ export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/cha
       }
 
       setMessages((prev) => [...prev, assistantMessage])
+
+      // Store user message content and assistant response for LIME history
+      const userMessageContent = content.trim()
+      let assistantMessageContent = ""
 
       try {
         const response = await fetch(apiUrl, {
@@ -91,6 +104,7 @@ export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/cha
                   console.log("Stream started")
                 } else if (parsed.type === "content") {
                   // Append text chunk to assistant message
+                  assistantMessageContent += parsed.text
                   setMessages((prev) =>
                     prev.map((msg) =>
                       msg.id === assistantMessageId
@@ -108,7 +122,17 @@ export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/cha
                 } else if (parsed.type === "lime-complete") {
                   // LIME explanation received
                   console.log("LIME explanation received:", parsed.data)
-                  setLimeExplanation(parsed.data)
+
+                  // Add to LIME history
+                  const historyItem: LimeHistoryItem = {
+                    id: `lime-${Date.now()}`,
+                    timestamp: Date.now(),
+                    userMessage: userMessageContent,
+                    assistantMessage: assistantMessageContent,
+                    explanation: parsed.data
+                  }
+
+                  setLimeHistory((prev) => [...prev, historyItem])
                   setIsLimeProcessing(false)
                 } else if (parsed.type === "error") {
                   // Handle error
@@ -140,7 +164,7 @@ export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/cha
     sendMessage,
     isLoading,
     isLimeProcessing,
-    limeExplanation,
+    limeHistory,
     error,
   }
 }
