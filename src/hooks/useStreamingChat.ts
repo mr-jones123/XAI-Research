@@ -1,0 +1,127 @@
+import { useState, useCallback } from "react"
+
+export interface Message {
+  id: string
+  role: "user" | "assistant"
+  content: string
+}
+
+export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/chat") {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const sendMessage = useCallback(
+    async (content: string) => {
+      if (!content.trim() || isLoading) return
+
+      // Add user message
+      const userMessage: Message = {
+        id: `user-${Date.now()}`,
+        role: "user",
+        content: content.trim(),
+      }
+
+      setMessages((prev) => [...prev, userMessage])
+      setIsLoading(true)
+      setError(null)
+
+      // Create assistant message placeholder
+      const assistantMessageId = `assistant-${Date.now()}`
+      const assistantMessage: Message = {
+        id: assistantMessageId,
+        role: "assistant",
+        content: "",
+      }
+
+      setMessages((prev) => [...prev, assistantMessage])
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages: [...messages, userMessage].map((m) => ({
+              role: m.role,
+              content: m.content,
+            })),
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const reader = response.body?.getReader()
+        const decoder = new TextDecoder()
+
+        if (!reader) {
+          throw new Error("Response body is not readable")
+        }
+
+        let buffer = ""
+
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          buffer += decoder.decode(value, { stream: true })
+          const lines = buffer.split("\n")
+          buffer = lines.pop() || ""
+
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              const data = line.slice(6)
+
+              try {
+                const parsed = JSON.parse(data)
+
+                if (parsed.type === "start") {
+                  // Stream started
+                  console.log("Stream started")
+                } else if (parsed.type === "content") {
+                  // Append text chunk to assistant message
+                  setMessages((prev) =>
+                    prev.map((msg) =>
+                      msg.id === assistantMessageId
+                        ? { ...msg, content: msg.content + parsed.text }
+                        : msg
+                    )
+                  )
+                } else if (parsed.type === "done") {
+                  // Stream complete
+                  console.log("Stream complete")
+                } else if (parsed.type === "error") {
+                  // Handle error
+                  setError(parsed.error)
+                  console.error("Stream error:", parsed.error)
+                }
+              } catch (e) {
+                console.error("Failed to parse SSE data:", data, e)
+              }
+            }
+          }
+        }
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Unknown error"
+        setError(errorMessage)
+        console.error("Streaming error:", err)
+
+        // Remove the empty assistant message on error
+        setMessages((prev) => prev.filter((msg) => msg.id !== assistantMessageId))
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [messages, isLoading, apiUrl]
+  )
+
+  return {
+    messages,
+    sendMessage,
+    isLoading,
+    error,
+  }
+}

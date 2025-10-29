@@ -45,3 +45,7 @@ env
 src/app/api/python/models/
 *.safetensors
 .env*.local
+
+#ai stuff
+.claude
+CLAUDE.md

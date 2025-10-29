@@ -1,55 +1,54 @@
+import os
 from typing import List
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query, Request as FastAPIRequest
+from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
-from openai import OpenAI
-from .utils.prompt import ClientMessage, convert_to_openai_messages
-from .utils.stream import patch_response_with_headers, stream_text
-from .utils.tools import AVAILABLE_TOOLS, TOOL_DEFINITIONS
-from vercel import oidc
-from vercel.headers import set_headers
-import os
+from google import genai
+from .utils.stream import stream_chat
 
 load_dotenv(".env")
 
 app = FastAPI()
-origins = [
-    "http://localhost:3000"
-]
 
+# Initialize Gemini client
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+
+# CORS configuration
 app.add_middleware(
-        CORSMiddleware,
-    allow_origins=origins,
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-@app.middleware("http")
-async def _vercel_set_headers(request: FastAPIRequest, call_next):
-    set_headers(dict(request.headers))
-    return await call_next(request)
 
 
-class Request(BaseModel):
-    messages: List[ClientMessage]
+class Message(BaseModel):
+    role: str
+    content: str
+
+
+class ChatRequest(BaseModel):
+    messages: List[Message]
 
 
 @app.post("/api/chat")
-async def handle_chat_data(request: Request, protocol: str = Query('data')):
-    messages = request.messages
-    openai_messages = convert_to_openai_messages(messages)
-    api_key = os.environ['OPENAI_API_KEY']
-    # Use OIDC token in production (on Vercel), otherwise use API key directly
-    is_vercel = os.environ.get('VERCEL') == '1'
-    if is_vercel:
-        client = OpenAI(api_key=oidc.get_vercel_oidc_token(),
-            base_url="https://ai-gateway.vercel.sh/v1")
-    else:
-        client = OpenAI(api_key=api_key)
-    response = StreamingResponse(
-        stream_text(client, openai_messages, TOOL_DEFINITIONS, AVAILABLE_TOOLS, protocol),
+async def handle_chat(request: ChatRequest):
+    messages = [{"role": msg.role, "content": msg.content} for msg in request.messages]
+
+    # Customize your system prompt here
+    system_prompt = """
+    Keep your answers as concise as possible.
+    """
+
+    return StreamingResponse(
+        stream_chat(client, messages, system_prompt),
         media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        }
     )
-    return patch_response_with_headers(response, protocol)

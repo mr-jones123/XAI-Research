@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react"
 import Loading from "./loading"
 import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-import type { Message } from "ai/react"
+import type { Message } from "@/hooks/useStreamingChat"
 
 interface ChatInterfaceProps {
   messages: Message[]

@@ -1,13 +1,12 @@
 "use client"
-import { useState, useMemo, useCallback } from "react"
-import { useChat } from "@ai-sdk/react"
+import { useState, useCallback } from "react"
+import { useStreamingChat } from "@/hooks/useStreamingChat"
 import ChatInterface from "./ChatInterface"
 // import ExplanationPanel from "./ExplainablePanel"
 import "highlight.js/styles/github.css"
 // import { Button } from "@/components/ui/button"
 // import { FileText, Info } from "lucide-react"
 // import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { DefaultChatTransport } from "ai"
 
 
 
@@ -19,64 +18,10 @@ import { DefaultChatTransport } from "ai"
 // }
 
 export default function Chatbot() {
-  // Using Vercel AI SDK's useChat hook with the UI Message Stream protocol
-
-  // v5: manage input locally (hook no longer manages input internally)
+  // Using custom streaming hook with Google Genai
   const [input, setInput] = useState("")
 
-  const { messages, sendMessage, status } = useChat({
-    transport: new DefaultChatTransport({
-      api: "http://127.0.0.1:8000/api/chat",
-    }),
-
-    prepareSendMessagesRequest: ({ messages }) => {
-      const toText = (m: any) =>
-        (m.parts || [])
-          .filter((p: any) => p.type === "text" && typeof p.text === "string")
-          .map((p: any) => p.text)
-          .join("")
-
-      const body = {
-        messages: messages.map((m: any) => ({
-          role: m.role,
-          content: toText(m),
-        })),
-      }
-
-      return { body }
-    },
-
-    // Transient "data-*" parts are only available here and not persisted in message.parts
-    onData: (part) => {
-      // Example: surface notifications or other transient data parts
-      if (part.type === "data-notification") {
-        // e.g., toast(part.data.message) or console.info
-        console.info("[notification]", part.data?.level, part.data?.message)
-      }
-      // Log other custom parts as needed (e.g., data-search)
-      if (String(part.type || "").startsWith("data-")) {
-        console.debug("[data-part]", part.type, part)
-      }
-    },
-  })
-
-  // v5: derive loading from status
-  const isLoading = status === "submitted" || status === "streaming"
-
-  // Adapter: if ChatInterface expects a single "content" string per message,
-  // derive it by concatenating text parts; keep all original comments intact.
-  const messagesForUI = useMemo(
-    () =>
-      messages.map((m) => {
-        const text =
-          (m.parts || [])
-            .filter((p: any) => p.type === "text" && typeof p.text === "string")
-            .map((p: any) => p.text)
-            .join("")
-        return { ...m, content: text }
-      }),
-    [messages]
-  )
+  const { messages, sendMessage, isLoading } = useStreamingChat()
 
   // Preserve the original handler prop shapes expected by ChatInterface
   const handleInputChange = useCallback(
@@ -91,8 +36,7 @@ export default function Chatbot() {
       e.preventDefault()
       const value = input.trim()
       if (!value) return
-      // sendMessage accepts a CreateUIMessage or string
-      sendMessage({ text: value })
+      sendMessage(value)
       setInput("")
     },
     [input, sendMessage]
@@ -130,9 +74,7 @@ export default function Chatbot() {
         {/* Chat Interface */}
         <div className="w-full transition-all duration-300">
           <ChatInterface
-            // If ChatInterface supports parts, pass `messages`;
-            // if it expects string content, pass `messagesForUI`.
-            messages={messagesForUI}
+            messages={messages}
             input={input}
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
