@@ -2,26 +2,15 @@
 import { useState, useCallback } from "react"
 import { useStreamingChat } from "@/hooks/useStreamingChat"
 import ChatInterface from "./ChatInterface"
-// import ExplanationPanel from "./ExplainablePanel"
+import ExplanationPanel from "./ExplainablePanel"
+import Loading from "./loading"
 import "highlight.js/styles/github.css"
-// import { Button } from "@/components/ui/button"
-// import { FileText, Info } from "lucide-react"
-// import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-
-
-
-// LIME-related interfaces - commented out for now, keeping for future use
-// interface ExplanationData {
-//   original_output: string
-//   explanation: Array<[string | number, number]>
-//   intercept?: number // Optional: C-LIME intercept value
-// }
 
 export default function Chatbot() {
   // Using custom streaming hook with Google Genai
   const [input, setInput] = useState("")
 
-  const { messages, sendMessage, isLoading } = useStreamingChat()
+  const { messages, sendMessage, isLoading, isLimeProcessing, limeExplanation } = useStreamingChat()
 
   // Preserve the original handler prop shapes expected by ChatInterface
   const handleInputChange = useCallback(
@@ -72,19 +61,37 @@ export default function Chatbot() {
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Chat Interface */}
-        <div className="w-full transition-all duration-300">
+        <div className={`transition-all duration-300 ${limeExplanation ? "lg:w-2/3" : "w-full"}`}>
           <ChatInterface
             messages={messages}
             input={input}
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
-            isLoading={isLoading}
+            isLoading={isLoading || isLimeProcessing}
             mode="general"
           />
         </div>
 
-        {/* Desktop Explanation Panel - commented out for now */}
-        {/* (kept exactly as provided) */}
+        {/* Explanation Panel - shown when LIME data is available */}
+        {limeExplanation && (
+          <div className="hidden lg:block lg:w-1/3 border-l border-gray-200 overflow-y-auto">
+            <ExplanationPanel
+              explanation={limeExplanation}
+              mode="general"
+            />
+          </div>
+        )}
+
+        {/* LIME Processing Indicator */}
+        {isLimeProcessing && !limeExplanation && (
+          <div className="hidden lg:flex lg:w-1/3 border-l border-gray-200 items-center justify-center p-8">
+            <div className="text-center">
+              <Loading />
+              <p className="mt-4 text-sm text-gray-600">Analyzing with LIME...</p>
+              <p className="mt-2 text-xs text-gray-500">This may take a few moments</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -6,9 +6,17 @@ export interface Message {
   content: string
 }
 
+export interface LimeExplanation {
+  original_output: string
+  explanation: Array<[string | number, number]>
+  intercept?: number
+}
+
 export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/chat") {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isLimeProcessing, setIsLimeProcessing] = useState(false)
+  const [limeExplanation, setLimeExplanation] = useState<LimeExplanation | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const sendMessage = useCallback(
@@ -93,6 +101,15 @@ export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/cha
                 } else if (parsed.type === "done") {
                   // Stream complete
                   console.log("Stream complete")
+                } else if (parsed.type === "lime-start") {
+                  // LIME processing started
+                  console.log("LIME processing started")
+                  setIsLimeProcessing(true)
+                } else if (parsed.type === "lime-complete") {
+                  // LIME explanation received
+                  console.log("LIME explanation received:", parsed.data)
+                  setLimeExplanation(parsed.data)
+                  setIsLimeProcessing(false)
                 } else if (parsed.type === "error") {
                   // Handle error
                   setError(parsed.error)
@@ -122,6 +139,8 @@ export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/cha
     messages,
     sendMessage,
     isLoading,
+    isLimeProcessing,
+    limeExplanation,
     error,
   }
 }
