@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from google import genai
-from .utils.stream import stream_chat
+from utils.stream import stream_chat
 
 load_dotenv(".env")
 

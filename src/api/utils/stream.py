@@ -1,8 +1,8 @@
 import json
 from typing import Dict, List
 from google import genai
-from ..clime.clime import CLIME
-from ..clime.gemini_wrapper import GeminiModelWrapper
+from clime.clime import CLIME
+from clime.gemini_wrapper import GeminiModelWrapper
 
 
 def stream_chat(

@@ -20,7 +20,8 @@ export interface LimeHistoryItem {
   explanation: LimeExplanation
 }
 
-export function useStreamingChat(apiUrl: string = "http://127.0.0.1:8000/api/chat") {
+const endpoint = process.env.RENDER_ENDPOINT || "/api/chat"
+export function useStreamingChat(apiUrl: string = endpoint) {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isLimeProcessing, setIsLimeProcessing] = useState(false)

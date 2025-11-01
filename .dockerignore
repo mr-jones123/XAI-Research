@@ -1,0 +1,48 @@
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Frontend (not needed in backend Docker)
+node_modules/
+.next/
+out/
+*.log
+
+# Environment files (use Docker secrets instead)
+.env
+.env.local
+.env.production
+
+# Documentation
+*.md
+!requirements.txt
+
+# Tests
+tests/
+*.test.py
+
+# OS
+.DS_Store
+Thumbs.db

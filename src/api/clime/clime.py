@@ -5,9 +5,9 @@ C-LIME explainer for text generation models.
 import numpy as np
 from typing import List, Dict, Any, Union
 
-from .segmenter import SpaCySegmenter, exclude_non_alphanumeric
-from .subset_utils import sample_subsets, mask_subsets
-from .linear_model import compute_linear_model_features, fit_linear_model
+from clime.segmenter import SpaCySegmenter, exclude_non_alphanumeric
+from clime.subset_utils import sample_subsets, mask_subsets
+from clime.linear_model import compute_linear_model_features, fit_linear_model
 
 
 class CLIME:
