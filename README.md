@@ -395,4 +395,4 @@ If you find this project useful, please consider giving it a star! ⭐
 
 ---
 
-**Built with ❤️ for AI transparency and trust**
+**Built with ❤️ for AI transparency**
