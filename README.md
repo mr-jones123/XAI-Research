@@ -9,6 +9,7 @@
 XeeAI is an open-source explainable AI platform that provides transparency into LLM decision-making processes. Using the LIME (Local Interpretable Model-agnostic Explanations) algorithm, XeeAI visualizes how AI models interpret user inputs and generate responses, helping users understand and trust AI systems.
 
 **Live Demo:** https://xai-research.vercel.app/
+**Research Paper:** https://mr-jones123.github.io/static-website-for-paper/
 
 ![XeeAI Demo](https://via.placeholder.com/800x400.png?text=XeeAI+Demo+Screenshot)
 
