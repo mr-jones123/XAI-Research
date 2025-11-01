@@ -20,8 +20,10 @@ export interface LimeHistoryItem {
   explanation: LimeExplanation
 }
 
-const endpoint = process.env.RENDER_ENDPOINT || "/api/chat"
-export function useStreamingChat(apiUrl: string = endpoint) {
+
+export function useStreamingChat() {
+  const endpoint = process.env.NEXT_PUBLIC_RENDER_ENDPOINT || "http://localhost:8000"
+
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isLimeProcessing, setIsLimeProcessing] = useState(false)
@@ -59,7 +61,7 @@ export function useStreamingChat(apiUrl: string = endpoint) {
       let assistantMessageContent = ""
 
       try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch(endpoint, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -157,7 +159,7 @@ export function useStreamingChat(apiUrl: string = endpoint) {
         setIsLoading(false)
       }
     },
-    [messages, isLoading, apiUrl]
+    [messages, isLoading, endpoint]
   )
 
   return {
