@@ -18,7 +18,10 @@ client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://*.vercel.app",  # Allow all Vercel preview deployments
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,7 +37,13 @@ class ChatRequest(BaseModel):
     messages: List[Message]
 
 
-@app.post("/api/chat")
+@app.get("/")
+async def health_check():
+    """Health check endpoint for Render."""
+    return {"status": "ok", "message": "XeeAI Backend is running"}
+
+
+@app.post("/")
 async def handle_chat(request: ChatRequest):
     messages = [{"role": msg.role, "content": msg.content} for msg in request.messages]
 
