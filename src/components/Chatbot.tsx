@@ -1,93 +1,50 @@
 "use client"
-import { useState } from "react"
+import { useState, useCallback } from "react"
+import { useStreamingChat, type LimeHistoryItem } from "@/hooks/useStreamingChat"
 import ChatInterface from "./ChatInterface"
 import ExplanationPanel from "./ExplainablePanel"
+import { Card } from "./ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
+import { Brain, Clock, BarChart3 } from "lucide-react"
 import "highlight.js/styles/github.css"
-import { Button } from "@/components/ui/button"
-import { FileText, Info } from "lucide-react"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-
-interface ExplanationData {
-  original_output: string
-  explanation: Array<[string | number, number]>
-  intercept?: number // Optional: C-LIME intercept value
-}
 
 export default function Chatbot() {
-  const [loading, setLoading] = useState(false)
-  const [currentQuery, setCurrentQuery] = useState<string>("")
-  const [explanation, setExplanation] = useState<ExplanationData | null>(null)
-  const [showExplanation, setShowExplanation] = useState(false)
-  const [mobileExplanationOpen, setMobileExplanationOpen] = useState(false)
+  // Using custom streaming hook with Google Genai
+  const [input, setInput] = useState("")
+  const [selectedHistoryItem, setSelectedHistoryItem] = useState<LimeHistoryItem | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const handleSubmit = async (input: string): Promise<string> => {
-    setLoading(true)
-    setCurrentQuery(input)
-    setExplanation(null)
-    setShowExplanation(false)
-    setMobileExplanationOpen(false)
+  const { messages, sendMessage, isLoading, isLimeProcessing, limeHistory } = useStreamingChat()
 
-    try {
-      // Call C-LIME backend
-      const res = await fetch(`${process.env.NEXT_PUBLIC_LIME_BACKEND}/explain`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          input_text: input,
-          segment_type: "s", // segment by sentences
-          oversampling_factor: 10.0,
-          max_units_replace: 2,
-        }),
-      })
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`)
-      }
-
-      const res_data = await res.json()
-      console.log("Received data from C-LIME backend:", res_data)
-
-      // Transform C-LIME response format to match existing UI expectations
-      if (res_data.attributions) {
-        const { units, scores } = res_data.attributions
-
-        // Transform arrays into [feature, score] tuples
-        const explanation = units.map((unit: string, index: number) => [
-          unit,
-          scores[index]
-        ])
-
-        const explanationData = {
-          original_output: res_data.response,
-          explanation: explanation,
-          intercept: res_data.intercept, // Include intercept for enhanced display
-        }
-
-        setExplanation(explanationData)
-        setShowExplanation(true)
-      }
-
-      return res_data.response || "No response provided"
-    } catch (error) {
-      console.error("Error fetching data:", error)
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        return "Unable to connect to the C-LIME backend. Make sure it's running on http://localhost:8000"
-      }
-      return `Sorry, something went wrong: ${error instanceof Error ? error.message : "Unknown error"}`
-    } finally {
-      setLoading(false)
-    }
+  const handleHistoryClick = (item: LimeHistoryItem) => {
+    setSelectedHistoryItem(item)
+    setIsDialogOpen(true)
   }
+
+  // Preserve the original handler prop shapes expected by ChatInterface
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setInput(e.target.value)
+    },
+    []
+  )
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      const value = input.trim()
+      if (!value) return
+      sendMessage(value)
+      setInput("")
+    },
+    [input, sendMessage]
+  )
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
-      {/* Mobile-First Header */}
       <div className="sticky top-0 z-20 bg-white border-b border-gray-200 shadow-sm">
         <div className="px-3 sm:px-4 lg:px-6 py-3">
           <div className="flex items-center justify-between">
-            {/* Logo and Title */}
             <div className="flex items-center space-x-2 min-w-0 flex-1">
               <div className="flex items-center space-x-3">
                 <img
@@ -101,50 +58,6 @@ export default function Chatbot() {
                 </div>
               </div>
             </div>
-
-            {/* Actions */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              {/* Explanation Controls */}
-              {explanation && (
-                <>
-                  {/* Mobile Sheet */}
-                  <div className="block xl:hidden">
-                    <Sheet open={mobileExplanationOpen} onOpenChange={setMobileExplanationOpen}>
-                      <SheetTrigger asChild>
-                        <Button variant="outline" size="sm" className="h-8 sm:h-9 px-2 sm:px-3 bg-transparent">
-                          <Info className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                          <span className="text-xs sm:text-sm">Explain</span>
-                        </Button>
-                      </SheetTrigger>
-                      <SheetContent side="bottom" className="h-[85vh] p-0">
-                        <div className="flex flex-col h-full">
-                          <SheetHeader className="p-4 border-b flex-shrink-0">
-                            <SheetTitle className="flex items-center space-x-2 text-left">
-                              <FileText className="h-5 w-5" />
-                              <span>LIME Explanation</span>
-                            </SheetTitle>
-                          </SheetHeader>
-                          <div className="flex-1 overflow-hidden">
-                            <ExplanationPanel explanation={explanation} isMobile={true} mode="general" />
-                          </div>
-                        </div>
-                      </SheetContent>
-                    </Sheet>
-                  </div>
-
-                  {/* Desktop Toggle */}
-                  <Button
-                    variant={showExplanation ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setShowExplanation(!showExplanation)}
-                    className="hidden xl:flex h-9 px-3"
-                  >
-                    <FileText className="h-4 w-4 mr-1" />
-                    {showExplanation ? "Hide" : "Show"} Explanation
-                  </Button>
-                </>
-              )}
-            </div>
           </div>
         </div>
       </div>
@@ -152,19 +65,114 @@ export default function Chatbot() {
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Chat Interface */}
-        <div
-          className={`w-full xl:flex-1 ${showExplanation ? "xl:border-r xl:border-gray-200" : ""} transition-all duration-300`}
-        >
-          <ChatInterface onSubmit={handleSubmit} loading={loading} mode="general" />
+        <div className={`transition-all duration-300 ${limeHistory.length > 0 || isLimeProcessing ? "lg:w-2/3" : "w-full"}`}>
+          <ChatInterface
+            messages={messages}
+            input={input}
+            handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit}
+            isLoading={isLoading}
+            mode="general"
+          />
         </div>
 
-        {/* Desktop Explanation Panel */}
-        {showExplanation && explanation && (
-          <div className="hidden xl:block w-96 2xl:w-[28rem] bg-white transition-all duration-300">
-            <ExplanationPanel explanation={explanation} isMobile={false} mode="general" />
+        {/* LIME History Sidebar */}
+        {(limeHistory.length > 0 || isLimeProcessing) && (
+          <div className="hidden lg:flex lg:w-1/3 border-l border-gray-200 flex-col">
+            {/* Sidebar Header */}
+            <div className="p-4 border-b border-gray-200 bg-gray-50">
+              <div className="flex items-center space-x-2">
+                <Brain className="w-5 h-5 text-blue-600" />
+                <h2 className="text-lg font-semibold text-gray-900">LIME History</h2>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">
+                {limeHistory.length} explanation{limeHistory.length !== 1 ? 's' : ''}
+                {isLimeProcessing && " • Processing..."}
+              </p>
+            </div>
+
+            {/* History List (scrollable) */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {/* LIME Processing Indicator */}
+              {isLimeProcessing && (
+                <Card className="p-4 bg-blue-50 border-blue-200">
+                  <div className="flex items-center space-x-3">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">Analyzing with LIME...</p>
+                      <p className="text-xs text-blue-700 mt-1">This may take a few moments</p>
+                    </div>
+                  </div>
+                </Card>
+              )}
+
+              {/* History Cards */}
+              {limeHistory.map((item, index) => (
+                <Card
+                  key={item.id}
+                  className="p-3 cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 hover:border-blue-300"
+                  onClick={() => handleHistoryClick(item)}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <span className="text-xs font-medium text-blue-600">#{limeHistory.length - index}</span>
+                    <div className="flex items-center text-xs text-gray-400">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {new Date(item.timestamp).toLocaleTimeString()}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-700 line-clamp-2 mb-2">
+                    <span className="font-medium">Q:</span> {item.userMessage}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-gray-500">
+                      {item.explanation.explanation.length} feature{item.explanation.explanation.length !== 1 ? 's' : ''}
+                    </p>
+                    <div className="flex items-center text-xs text-blue-600 font-medium">
+                      <BarChart3 className="w-3 h-3 mr-1" />
+                      View Graph
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
           </div>
         )}
       </div>
+
+      {/* LIME Explanation Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <Brain className="w-5 h-5 text-blue-600" />
+              <span>LIME Explanation</span>
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedHistoryItem && (
+            <div className="flex-1 overflow-y-auto">
+              {/* Question & Answer Context */}
+              <div className="mb-4 p-4 bg-gray-50 rounded-lg space-y-2">
+                <div>
+                  <p className="text-xs font-medium text-gray-500 mb-1">User Question:</p>
+                  <p className="text-sm text-gray-900">{selectedHistoryItem.userMessage}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500 mb-1">AI Response:</p>
+                  <p className="text-sm text-gray-700 line-clamp-3">{selectedHistoryItem.assistantMessage}</p>
+                </div>
+              </div>
+
+              {/* Explanation Panel */}
+              <ExplanationPanel
+                explanation={selectedHistoryItem.explanation}
+                mode="general"
+                isDialog={true}
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
