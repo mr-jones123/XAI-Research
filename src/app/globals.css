@@ -1,11 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: var(--font-sentient), serif;
+  font-family: var(--font-inter), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -33,73 +31,86 @@ img {
 
 @layer base {
   :root {
+    /* Custom XAI Blue Gradient Palette */
+    --xai-federal: #03045e;
+    --xai-marian: #023e8a;
+    --xai-honolulu: #0077b6;
+    --xai-bluegreen: #0096c7;
+    --xai-pacific: #00b4d8;
+    --xai-vivid: #48cae4;
+    --xai-nonphoto: #90e0ef;
+    --xai-nonphoto2: #ade8f4;
+    --xai-lightcyan: #caf0f8;
+
+    /* Light Mode Theme - Using gradient palette */
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --foreground: 217 95% 19%;  /* Federal blue for text */
+    --card: 195 100% 98%;  /* Light cyan tint */
+    --card-foreground: 217 95% 19%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --popover-foreground: 217 95% 19%;
+    --primary: 198 98% 36%;  /* Honolulu blue as primary */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 195 76% 87%;  /* Non-photo blue 2 */
+    --secondary-foreground: 217 95% 19%;
+    --muted: 195 100% 95%;  /* Light cyan */
+    --muted-foreground: 198 91% 25%;  /* Marian blue muted */
+    --accent: 193 77% 69%;  /* Vivid sky blue */
+    --accent-foreground: 217 95% 19%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --border: 195 67% 88%;  /* Non-photo blue border */
+    --input: 195 67% 88%;
+    --ring: 198 98% 36%;  /* Honolulu blue */
+    --chart-1: 198 98% 36%;  /* Honolulu */
+    --chart-2: 192 85% 43%;  /* Blue green */
+    --chart-3: 191 81% 43%;  /* Pacific */
+    --chart-4: 193 77% 69%;  /* Vivid */
+    --chart-5: 195 67% 75%;  /* Non-photo */
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 195 100% 98%;
+    --sidebar-foreground: 198 91% 25%;
+    --sidebar-primary: 198 98% 36%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 195 76% 87%;
+    --sidebar-accent-foreground: 217 95% 19%;
+    --sidebar-border: 195 67% 88%;
+    --sidebar-ring: 198 98% 36%;
   }
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+    /* Dark Mode - Inverted gradient palette */
+    --background: 217 95% 11%;  /* Federal blue dark background */
+    --foreground: 195 100% 95%;  /* Light cyan for text */
+    --card: 217 91% 15%;  /* Marian blue for cards */
+    --card-foreground: 195 100% 95%;
+    --popover: 217 91% 15%;
+    --popover-foreground: 195 100% 95%;
+    --primary: 191 81% 43%;  /* Pacific cyan as primary in dark */
+    --primary-foreground: 217 95% 11%;
+    --secondary: 198 91% 25%;  /* Marian blue secondary */
+    --secondary-foreground: 195 100% 95%;
+    --muted: 217 91% 20%;
+    --muted-foreground: 195 67% 75%;  /* Non-photo for muted text */
+    --accent: 192 85% 43%;  /* Blue green accent */
+    --accent-foreground: 195 100% 95%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 198 91% 25%;  /* Marian blue borders */
+    --input: 198 91% 25%;
+    --ring: 191 81% 43%;  /* Pacific cyan */
+    --chart-1: 191 81% 43%;  /* Pacific */
+    --chart-2: 192 85% 43%;  /* Blue green */
+    --chart-3: 193 77% 69%;  /* Vivid */
+    --chart-4: 195 67% 75%;  /* Non-photo */
+    --chart-5: 195 76% 87%;  /* Non-photo 2 */
+    --sidebar-background: 217 95% 11%;
+    --sidebar-foreground: 195 100% 95%;
+    --sidebar-primary: 191 81% 43%;
+    --sidebar-primary-foreground: 217 95% 11%;
+    --sidebar-accent: 198 91% 25%;
+    --sidebar-accent-foreground: 195 100% 95%;
+    --sidebar-border: 198 91% 25%;
+    --sidebar-ring: 191 81% 43%;
   }
 }
 
@@ -109,5 +120,22 @@ img {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-instrument), serif;
+  }
+}
+
+@layer utilities {
+  .font-instrument {
+    font-family: var(--font-instrument), serif;
+  }
+
+  .font-inter {
+    font-family: var(--font-inter), sans-serif;
+  }
+
+  .font-sentient {
+    font-family: var(--font-sentient), serif;
   }
 }

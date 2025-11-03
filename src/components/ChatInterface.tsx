@@ -54,7 +54,7 @@ export default function ChatInterface({
 
   const getMessageBubbleStyle = (role: string) => {
     if (role === "user") {
-      return "bg-blue-600 text-white border-blue-600"
+      return "bg-xai-honolulu dark:bg-xai-marian text-white border-xai-honolulu dark:border-xai-marian"
     } else {
       return "bg-gray-50 text-gray-900 border-gray-200"
     }
@@ -77,12 +77,12 @@ export default function ChatInterface({
             </div>
 
             {/* Tutorial Section */}
-            <Card className="bg-blue-50 border-blue-200 p-4 sm:p-6 lg:p-8 text-left">
-              <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-blue-800 mb-4">
+            <Card className="bg-xai-lightcyan dark:bg-xai-marian border-xai-nonphoto dark:border-xai-honolulu p-4 sm:p-6 lg:p-8 text-left">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-xai-marian dark:text-xai-lightcyan mb-4">
                 {mode === "general" ? "General Mode - How It Works" : "Summary Mode - How It Works"}
               </h2>
 
-              <div className="space-y-4 text-sm sm:text-base text-blue-900">
+              <div className="space-y-4 text-sm sm:text-base text-xai-federal dark:text-xai-nonphoto">
                 <p>
                   {mode === "general"
                     ? 'XeeAI is a general AI chatbot that is integrated with an Explainable AI (XAI) algorithm called LIME. You may use it just as any other regular chatbots, like asking "What\'s Machine Learning?" or "Explain quantum computing". Unlike other AI, XeeAI shows you how your input influenced its decisions.'
@@ -110,11 +110,11 @@ export default function ChatInterface({
                 <p>XeeAI will then turn those words with scores to a bar graph.</p>
 
                 {/* Examples */}
-                <Card className="bg-white border-blue-100 p-4 mt-4">
-                  <h3 className="font-semibold text-blue-800 mb-3">
+                <Card className="bg-white dark:bg-xai-federal border-xai-nonphoto dark:border-xai-honolulu p-4 mt-4">
+                  <h3 className="font-semibold text-xai-marian dark:text-xai-lightcyan mb-3">
                     {mode === "general" ? "Example Questions:" : "Example Usage:"}
                   </h3>
-                  <ul className="text-sm text-blue-700 space-y-1">
+                  <ul className="text-sm text-xai-honolulu dark:text-xai-nonphoto space-y-1">
                     {mode === "general" ? (
                       <>
                         <li>• "What is machine learning?"</li>

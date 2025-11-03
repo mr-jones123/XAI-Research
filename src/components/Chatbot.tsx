@@ -82,7 +82,7 @@ export default function Chatbot() {
             {/* Sidebar Header */}
             <div className="p-4 border-b border-gray-200 bg-gray-50">
               <div className="flex items-center space-x-2">
-                <Brain className="w-5 h-5 text-blue-600" />
+                <Brain className="w-5 h-5 text-xai-honolulu dark:text-xai-pacific" />
                 <h2 className="text-lg font-semibold text-gray-900">LIME History</h2>
               </div>
               <p className="text-xs text-gray-600 mt-1">
@@ -95,12 +95,12 @@ export default function Chatbot() {
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {/* LIME Processing Indicator */}
               {isLimeProcessing && (
-                <Card className="p-4 bg-blue-50 border-blue-200">
+                <Card className="p-4 bg-xai-lightcyan dark:bg-xai-marian border-xai-nonphoto dark:border-xai-honolulu">
                   <div className="flex items-center space-x-3">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-xai-honolulu dark:border-xai-pacific"></div>
                     <div>
-                      <p className="text-sm font-medium text-blue-900">Analyzing with LIME...</p>
-                      <p className="text-xs text-blue-700 mt-1">This may take a few moments</p>
+                      <p className="text-sm font-medium text-xai-marian dark:text-xai-lightcyan">Analyzing with LIME...</p>
+                      <p className="text-xs text-xai-honolulu dark:text-xai-nonphoto mt-1">This may take a few moments</p>
                     </div>
                   </div>
                 </Card>
@@ -110,11 +110,11 @@ export default function Chatbot() {
               {limeHistory.map((item, index) => (
                 <Card
                   key={item.id}
-                  className="p-3 cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 hover:border-blue-300"
+                  className="p-3 cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 hover:border-xai-pacific dark:hover:border-xai-vivid"
                   onClick={() => handleHistoryClick(item)}
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <span className="text-xs font-medium text-blue-600">#{limeHistory.length - index}</span>
+                    <span className="text-xs font-medium text-xai-honolulu dark:text-xai-pacific">#{limeHistory.length - index}</span>
                     <div className="flex items-center text-xs text-gray-400">
                       <Clock className="w-3 h-3 mr-1" />
                       {new Date(item.timestamp).toLocaleTimeString()}
@@ -127,7 +127,7 @@ export default function Chatbot() {
                     <p className="text-xs text-gray-500">
                       {item.explanation.explanation.length} feature{item.explanation.explanation.length !== 1 ? 's' : ''}
                     </p>
-                    <div className="flex items-center text-xs text-blue-600 font-medium">
+                    <div className="flex items-center text-xs text-xai-honolulu dark:text-xai-pacific font-medium">
                       <BarChart3 className="w-3 h-3 mr-1" />
                       View Graph
                     </div>
@@ -144,7 +144,7 @@ export default function Chatbot() {
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
-              <Brain className="w-5 h-5 text-blue-600" />
+              <Brain className="w-5 h-5 text-xai-honolulu dark:text-xai-pacific" />
               <span>LIME Explanation</span>
             </DialogTitle>
           </DialogHeader>

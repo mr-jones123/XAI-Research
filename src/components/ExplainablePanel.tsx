@@ -92,7 +92,7 @@ export default function ExplanationPanel({ explanation, mode, isMobile = false, 
       {!isDialog && (
         <div className="p-4 border-b border-gray-200 bg-gray-50">
           <div className="flex items-center space-x-2 mb-2">
-            <Brain className="w-5 h-5 text-blue-600" />
+            <Brain className="w-5 h-5 text-xai-honolulu dark:text-xai-pacific" />
             <h2 className="text-lg font-semibold text-gray-900">LIME Explanation</h2>
           </div>
           <p className="text-sm text-gray-600 font-geist">
@@ -286,18 +286,18 @@ export default function ExplanationPanel({ explanation, mode, isMobile = false, 
 
         {/* C-LIME Intercept */}
         {explanation.intercept !== undefined && (
-          <Card className="bg-blue-50 border-blue-200">
+          <Card className="bg-xai-lightcyan dark:bg-xai-marian border-xai-nonphoto dark:border-xai-honolulu">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center space-x-2">
-                <Info className="w-4 h-4 text-blue-600" />
+                <Info className="w-4 h-4 text-xai-honolulu dark:text-xai-pacific" />
                 <span>Baseline Score (Intercept)</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-md text-gray-700 space-y-2">
-                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-200">
-                  <span className="font-medium">Intercept Value:</span>
-                  <span className="text-2xl font-bold text-blue-600">
+                <div className="flex items-center justify-between p-3 bg-white dark:bg-xai-federal rounded-lg border border-xai-nonphoto dark:border-xai-honolulu">
+                  <span className="font-medium dark:text-xai-nonphoto">Intercept Value:</span>
+                  <span className="text-2xl font-bold text-xai-honolulu dark:text-xai-pacific">
                     {explanation.intercept.toFixed(4)}
                   </span>
                 </div>

@@ -25,10 +25,10 @@ export const ProfileCard = ({
   description
 }: ProfileProps) => {
   const colorVariants = {
-    blue: "bg-blue-100",
-    lightBlue: "bg-blue-50",
-    skyBlue: "bg-sky-100",
-    teal: "bg-teal-50",
+    blue: "bg-xai-nonphoto2 dark:bg-xai-marian",
+    lightBlue: "bg-xai-lightcyan dark:bg-xai-honolulu",
+    skyBlue: "bg-xai-nonphoto dark:bg-xai-bluegreen",
+    teal: "bg-xai-vivid dark:bg-xai-pacific",
   };
   return (
     <div className="w-full sm:w-64 cursor-pointer group" onClick={onClick}>
@@ -58,7 +58,7 @@ export const ProfileCard = ({
               href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full transition-colors"
+              className="bg-xai-honolulu hover:bg-xai-marian dark:bg-xai-pacific dark:hover:bg-xai-vivid text-white p-2 rounded-full transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
               <Linkedin size={20} />

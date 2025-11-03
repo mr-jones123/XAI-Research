@@ -1,13 +1,22 @@
 import { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
+import { Instrument_Serif, Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import NavBarWrapper from "@/components/ui/navBarWrapper";
 import { Toaster } from "@/components/ui/toaster"
-const geist = Geist_Mono({
+
+// New primary fonts
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
-  variable: "--font-geist",
+  variable: "--font-instrument",
+  weight: ["400"],
 });
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+// Legacy fonts (kept for compatibility)
 const sentient = localFont({
   src: "./fonts/sentient.ttf",
   variable: "--font-sentient",
@@ -26,14 +35,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sentient.variable} ${geist.variable} scroll-smooth`}
+      className={`${instrumentSerif.variable} ${inter.variable} ${sentient.variable} scroll-smooth`}
     >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="antialiased">
-        <NavBarWrapper />
-        <div className="flex flex-col min-h-screen">{children}</div>
+      <body className="antialiased bg-gradient-to-br from-xai-lightcyan to-white dark:from-xai-federal dark:to-xai-marian">
+        <div className="flex flex-col min-h-screen ">{children}</div>
         <Toaster />
       </body>
     </html>

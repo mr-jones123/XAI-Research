@@ -165,7 +165,7 @@ export default function Loading() {
       <div className="max-w-4xl w-full space-y-8">
         <div className="text-center space-y-4 bg-white rounded-lg p-6 shadow-lg">
           <div className="flex items-center justify-center space-x-2">
-            <Brain className="w-8 h-8 text-blue-600" />
+            <Brain className="w-8 h-8 text-xai-honolulu dark:text-xai-pacific" />
             <h1 className="text-3xl font-bold text-gray-900">LIME Analysis</h1>
           </div>
           <p className="text-gray-600 text-lg font-geist">Local Interpretable Model-agnostic Explanations. See how it works!</p>
@@ -200,17 +200,17 @@ export default function Loading() {
           <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
             <div
               ref={progressRef}
-              className="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-500"
+              className="bg-gradient-to-r from-xai-honolulu to-xai-pacific h-3 rounded-full transition-all duration-500"
               style={{ width: "0%" }}
             />
           </div>
 
           {/* Current Step Info */}
-          <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg">
-            <div className="flex-shrink-0 p-2 bg-blue-100 rounded-full">{limeSteps[currentStep]?.icon}</div>
+          <div className="flex items-center space-x-4 p-4 bg-xai-lightcyan dark:bg-xai-marian rounded-lg">
+            <div className="flex-shrink-0 p-2 bg-xai-nonphoto2 dark:bg-xai-honolulu rounded-full">{limeSteps[currentStep]?.icon}</div>
             <div>
-              <h4 className="font-semibold text-blue-900">{limeSteps[currentStep]?.title}</h4>
-              <p className="text-blue-700 text-sm">{limeSteps[currentStep]?.description}</p>
+              <h4 className="font-semibold text-xai-marian dark:text-xai-lightcyan">{limeSteps[currentStep]?.title}</h4>
+              <p className="text-xai-honolulu dark:text-xai-nonphoto text-sm">{limeSteps[currentStep]?.description}</p>
             </div>
           </div>
         </div>
@@ -222,7 +222,7 @@ export default function Loading() {
               key={step.id}
               className={`p-4 rounded-lg border-2 transition-all duration-300 ${
                 index === currentStep
-                  ? "border-blue-500 bg-blue-50 shadow-lg"
+                  ? "border-xai-pacific bg-xai-lightcyan dark:border-xai-vivid dark:bg-xai-marian shadow-lg"
                   : index < currentStep
                     ? "border-green-500 bg-green-50"
                     : "border-gray-200 bg-white"
@@ -232,7 +232,7 @@ export default function Loading() {
                 <div
                   className={`p-1 rounded-full ${
                     index === currentStep
-                      ? "bg-blue-100 text-blue-600"
+                      ? "bg-xai-nonphoto2 text-xai-honolulu dark:bg-xai-honolulu dark:text-xai-lightcyan"
                       : index < currentStep
                         ? "bg-green-100 text-green-600"
                         : "bg-gray-100 text-gray-400"
@@ -250,7 +250,7 @@ export default function Loading() {
         {/* Loading Indicator */}
         <div className="text-center">
           <div className="inline-flex items-center space-x-2 text-gray-600">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-xai-honolulu dark:border-xai-pacific"></div>
             <span className="text-sm">Processing your request...</span>
           </div>
         </div>

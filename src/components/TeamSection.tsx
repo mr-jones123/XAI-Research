@@ -19,7 +19,7 @@ const TeamSection = () => {
     setSelectedDev(null);
   };
   return (
-    <section className="py-10 sm:py-16 md:py-20 bg-gradient-to-b from-white to-blue-50">
+    <section className="py-10 sm:py-16 md:py-20 bg-gradient-to-b from-white to-xai-lightcyan dark:from-xai-federal dark:to-xai-marian">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold mb-3 md:mb-4">Our Team</h2>

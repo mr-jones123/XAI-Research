@@ -14,6 +14,18 @@ export default {
         geist : ["var(--font-geist)"]
       },
       colors: {
+        // Custom blue gradient palette for XAI Research
+        xai: {
+          federal: "#03045e",      // Darkest - Dark mode backgrounds, strong CTAs
+          marian: "#023e8a",        // Primary buttons, emphasized elements
+          honolulu: "#0077b6",      // Primary brand color
+          bluegreen: "#0096c7",     // Interactive elements, hover states
+          pacific: "#00b4d8",       // Accent highlights, active states
+          vivid: "#48cae4",         // Light accents, secondary highlights
+          nonphoto: "#90e0ef",      // Backgrounds, subtle tints
+          nonphoto2: "#ade8f4",     // Light backgrounds, cards
+          lightcyan: "#caf0f8",     // Lightest backgrounds, subtle gradients
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
