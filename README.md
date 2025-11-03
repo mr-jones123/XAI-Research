@@ -9,6 +9,7 @@
 XeeAI is an open-source explainable AI platform that provides transparency into LLM decision-making processes. Using the LIME (Local Interpretable Model-agnostic Explanations) algorithm, XeeAI visualizes how AI models interpret user inputs and generate responses, helping users understand and trust AI systems.
 
 **Live Demo:** https://xai-research.vercel.app/
+**Research Paper:** https://mr-jones123.github.io/static-website-for-paper/
 
 ![XeeAI Demo](https://via.placeholder.com/800x400.png?text=XeeAI+Demo+Screenshot)
 
@@ -380,7 +381,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📧 Contact
 
-Project Link: [https://github.com/yourusername/XAI-Research](https://github.com/yourusername/XAI-Research)
+Project Link: [https://github.com/yourusername/XAI-Research](https://github.com/yourusername/XAI-Research)](https://github.com/mr-jones123/XAI-Research.git)
 
 Live Demo: [https://xai-research.vercel.app/](https://xai-research.vercel.app/)
 
@@ -390,8 +391,8 @@ Live Demo: [https://xai-research.vercel.app/](https://xai-research.vercel.app/)
 
 If you find this project useful, please consider giving it a star! ⭐
 
-[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/XAI-Research&type=Date)](https://star-history.com/#yourusername/XAI-Research&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=mr-jones1231XAI-Research&type=Date)](https://star-history.com/#mr-jones123/XAI-Research&Date)
 
 ---
 
-**Built with ❤️ for AI transparency and trust**
+**Built with ❤️ for AI transparency**
