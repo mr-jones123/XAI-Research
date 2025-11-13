@@ -11,7 +11,7 @@ import {
   Cell
 } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Brain, BarChart3, Info } from "lucide-react"
+import { Brain, BarChart3 } from "lucide-react"
 import BibTEX  from "./Bibtex"
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden" // Add this import
@@ -283,44 +283,6 @@ export default function ExplanationPanel({ explanation, mode, isMobile = false, 
             </div>
           </CardContent>
         </Card>
-
-        {/* C-LIME Intercept */}
-        {explanation.intercept !== undefined && (
-          <Card className="bg-xai-lightcyan dark:bg-xai-marian border-xai-nonphoto dark:border-xai-honolulu">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center space-x-2">
-                <Info className="w-4 h-4 text-xai-honolulu dark:text-xai-pacific" />
-                <span>Baseline Score (Intercept)</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-md text-gray-700 space-y-2">
-                <div className="flex items-center justify-between p-3 bg-white dark:bg-xai-federal rounded-lg border border-xai-nonphoto dark:border-xai-honolulu">
-                  <span className="font-medium dark:text-xai-nonphoto">Intercept Value:</span>
-                  <span className="text-2xl font-bold text-xai-honolulu dark:text-xai-pacific">
-                    {explanation.intercept.toFixed(4)}
-                  </span>
-                </div>
-                <p className="text-sm">
-                  The <strong>intercept</strong> represents the baseline score when no input text is present.
-                  {explanation.intercept > 0.5 ? (
-                    <> A high intercept ({explanation.intercept.toFixed(2)}) means the AI has strong default behavior
-                    and is less dependent on your specific input.</>
-                  ) : explanation.intercept > 0 ? (
-                    <> A moderate intercept ({explanation.intercept.toFixed(2)}) indicates the AI balances between
-                    default behavior and input-specific responses.</>
-                  ) : (
-                    <> A low or negative intercept ({explanation.intercept.toFixed(2)}) means the AI heavily depends
-                    on your input to generate quality responses.</>
-                  )}
-                </p>
-                <p className="text-xs text-gray-600 italic">
-                  💡 Predicted score = Σ(unit scores) + intercept
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* BibTEX */}
           <div className="text-xs">
